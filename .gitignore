@@ -6,5 +6,5 @@
 *.ear
 
 # ignore update site folder cuz 
-cakephp-eclipse-update-site/
+update-site/
 
