@@ -4,5 +4,4 @@ import org.eclipse.core.resources.IFile;
 
 public interface IController extends ICakePHPFile
 {
-  public IFile getFile();
 }

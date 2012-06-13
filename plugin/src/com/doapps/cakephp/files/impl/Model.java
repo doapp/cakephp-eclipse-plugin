@@ -2,22 +2,20 @@ package com.doapps.cakephp.files.impl;
 
 import org.eclipse.core.resources.IFile;
 
-import com.doapps.cakephp.files.ICakePHPProject;
-import com.doapps.cakephp.files.IController;
+import com.doapps.cakephp.files.IModel;
 
-public class Controller extends CakePHPFile implements IController
+public class Model extends CakePHPFile implements IModel
 {
-  public Controller(ICakePHPProject project, IFile file)
+
+  public Model(CakePHPProject project, IFile file)
   {
     super(project, file);
   }
-
   @Override
   public String getInitialContents()
   {
     // TODO Auto-generated method stub
     return null;
   }
-  
 
 }

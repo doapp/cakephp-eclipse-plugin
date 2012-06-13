@@ -80,43 +80,9 @@ public class OpenCakePHPFileHandler extends AbstractHandler
     {
       return null;
     }
+    project.openNextFile();
     
-    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    
-    String selectedText = CakePHPHelper.getSelectedText(page);
-    IFile selectedFile = CakePHPHelper.getSelectedFile(page);
-    byte[] initialContents = new byte[0];
-    if (selectedFile != null)
-    {
-      IFile destinationFile = null;
-
-      if (CakePHPHelper.isModel(selectedFile))
-      {
-        destinationFile = CakePHPHelper.getControllerFromModel(selectedFile);
-        initialContents = CakePHPHelper.getInitialControllerContents(selectedFile);
-      }
-      else if (CakePHPHelper.isController(selectedFile))
-      {
-        if ((selectedText != null) && (selectedText.length() > 0))
-        {
-          destinationFile = CakePHPHelper.getViewFromAction(selectedFile, selectedText);
-        }
-        if (destinationFile == null)
-        {
-          destinationFile = CakePHPHelper.getModelFromController(selectedFile);
-        }
-      }
-      else if (CakePHPHelper.isView(selectedFile))
-      {
-        destinationFile = CakePHPHelper.getJSFileFromView(selectedFile);
-        initialContents = CakePHPHelper.getInitialJSContents();
-      }
-      else if (CakePHPHelper.isJSFile(selectedFile))
-      {
-        destinationFile = CakePHPHelper.getViewFromJSFile(selectedFile);
-      }
-      CakePHPHelper.openFile(page, destinationFile, initialContents);
-    }
+    // TODO: what should I return here?
     return null;
   }
 
