@@ -111,5 +111,19 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.doapps.cakephp.preferences.CakePHPPreferencePage"
+            id="com.doapps.cakephp.preferences.CakePHPPreferencePage"
+            name="CakePHP">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.doapps.cakephp.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
