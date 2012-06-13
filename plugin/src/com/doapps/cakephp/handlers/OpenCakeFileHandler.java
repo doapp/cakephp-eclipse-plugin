@@ -8,7 +8,7 @@
  *
  * Copyright 2012 - All rights reserved.  Created by DoApp, Inc.
  */
-package com.doapps.handlers;
+package com.doapps.cakephp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

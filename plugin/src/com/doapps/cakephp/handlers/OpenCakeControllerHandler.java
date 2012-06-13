@@ -8,14 +8,16 @@
  *
  * Copyright 2012 - All rights reserved.  Created by DoApp, Inc.
  */
-package com.doapps.handlers;
+package com.doapps.cakephp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
 import com.doapps.cakephp.util.CakePHPHelper;
 
@@ -23,7 +25,7 @@ import com.doapps.cakephp.util.CakePHPHelper;
  * @author jeremy
  * 
  */
-public class OpenCakeJSFileHandler extends AbstractHandler
+public class OpenCakeControllerHandler extends AbstractHandler
 {
 
   /*
@@ -43,15 +45,15 @@ public class OpenCakeJSFileHandler extends AbstractHandler
 
       if (CakePHPHelper.isModel(selectedFile))
       {
+        destinationFile = CakePHPHelper.getControllerFromModel(selectedFile);
+      }
+      else if (CakePHPHelper.isController(selectedFile))
+      {
         // TODO: implement pop-up
       }
-      if (CakePHPHelper.isController(selectedFile))
+      else if (CakePHPHelper.isView(selectedFile))
       {
-        destinationFile = CakePHPHelper.getModelFromController(selectedFile);
-      }
-      if (CakePHPHelper.isView(selectedFile))
-      {
-        destinationFile = CakePHPHelper.getJSFileFromView(selectedFile);
+        destinationFile = CakePHPHelper.getControllerFromView(selectedFile);
       }
       CakePHPHelper.openFile(page, destinationFile, new byte[0]);
     }

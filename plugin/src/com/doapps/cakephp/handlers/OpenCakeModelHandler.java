@@ -8,7 +8,7 @@
  *
  * Copyright 2012 - All rights reserved.  Created by DoApp, Inc.
  */
-package com.doapps.handlers;
+package com.doapps.cakephp.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -25,7 +25,7 @@ import com.doapps.cakephp.util.CakePHPHelper;
  * @author jeremy
  * 
  */
-public class OpenCakeControllerHandler extends AbstractHandler
+public class OpenCakeModelHandler extends AbstractHandler
 {
 
   /*
@@ -45,15 +45,15 @@ public class OpenCakeControllerHandler extends AbstractHandler
 
       if (CakePHPHelper.isModel(selectedFile))
       {
-        destinationFile = CakePHPHelper.getControllerFromModel(selectedFile);
+        // TODO: implement pop-up to select from models?
       }
       else if (CakePHPHelper.isController(selectedFile))
       {
-        // TODO: implement pop-up
+        destinationFile = CakePHPHelper.getModelFromController(selectedFile);
       }
       else if (CakePHPHelper.isView(selectedFile))
       {
-        destinationFile = CakePHPHelper.getControllerFromView(selectedFile);
+        destinationFile = CakePHPHelper.getModelFromView(selectedFile);
       }
       CakePHPHelper.openFile(page, destinationFile, new byte[0]);
     }

@@ -30,10 +30,10 @@
    </extension>
    
   <extension point="org.eclipse.ui.handlers">
-    <handler commandId="com.doapps.commands.OpenCakeFile" class="com.doapps.handlers.OpenCakePHPFileHandler"></handler>
-    <handler commandId="com.doapps.commands.OpenCakeModel" class="com.doapps.handlers.OpenCakeModelHandler"></handler>
-    <handler commandId="com.doapps.commands.OpenCakeController" class="com.doapps.handlers.OpenCakeControllerHandler"></handler>
-    <handler commandId="com.doapps.commands.OpenCakeJSFile" class="com.doapps.handlers.OpenCakeJSFileHandler"></handler>
+    <handler commandId="com.doapps.commands.OpenCakeFile" class="com.doapps.cakephp.handlers.OpenCakePHPFileHandler"></handler>
+    <handler commandId="com.doapps.commands.OpenCakeModel" class="com.doapps.cakephp.handlers.OpenCakeModelHandler"></handler>
+    <handler commandId="com.doapps.commands.OpenCakeController" class="com.doapps.cakephp.handlers.OpenCakeControllerHandler"></handler>
+    <handler commandId="com.doapps.commands.OpenCakeJSFile" class="com.doapps.cakephp.handlers.OpenCakeJSFileHandler"></handler>
   </extension>
   
 <extension point="org.eclipse.ui.bindings">
