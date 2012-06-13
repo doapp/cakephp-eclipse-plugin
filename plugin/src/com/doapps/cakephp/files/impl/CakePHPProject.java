@@ -65,22 +65,7 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public boolean isModel(IFile file)
   {
-    // TODO: determine if actually a model file
-    if (file == null)
-    {
-      return false;
-    }
-    IPath modelFilePath = file.getProjectRelativePath();
-    int segmentCount = modelFilePath.segmentCount();
-    if (segmentCount < 2)
-    {
-      return false;
-    }
-    String folderName = modelFilePath.segment(segmentCount - 2);
-    String fileName = file.getName();
-    boolean isModelFolder = getModelFolderRegex().matcher(folderName).matches();
-    boolean isModelSuffix = getModelFileRegex().matcher(fileName).matches();
-    return isModelFolder && isModelSuffix;
+    return isInFolderAndNameMatches(file, getModelFolderRegex(), getModelFileRegex());
   }
 
   private Pattern getModelFolderRegex()
@@ -112,17 +97,15 @@ public class CakePHPProject implements ICakePHPProject
     }
     String folderName = filePath.segment(segmentCount - 2);
     String fileName = file.getName();
-    boolean isFolder = getControllerFolderRegex().matcher(folderName).matches();
-    boolean isFile = getControllerFileRegex().matcher(fileName).matches();
+    boolean isFolder = folderPattern.matcher(folderName).matches();
+    boolean isFile = filePattern.matcher(fileName).matches();
     return isFolder && isFile;
   }
 
   @Override
   public boolean isController(IFile file)
   {
-    // TODO: determine if actually a model file
     return isInFolderAndNameMatches(file, getControllerFolderRegex(), getControllerFileRegex());
-    
   }
 
   private Pattern getControllerFolderRegex()
@@ -186,34 +169,39 @@ public class CakePHPProject implements ICakePHPProject
   public boolean openNextFile()
   {
     ICakePHPFile cakePHPFile = getFileToOpen();
+    if (cakePHPFile == null)
+    {
+      return false;
+    }
     IFile destinationFile = cakePHPFile.getFile();
+    if (destinationFile == null)
+    {
+      return false;
+    }
     try
     {
-      if (destinationFile != null)
+      // TODO: check in preferences to see if automatically create files or prompt or do nothing
+      if (!destinationFile.exists())
       {
-        // TODO: check in preferences to see if automatically create files or prompt or do nothing
-        if (!destinationFile.exists())
+        // currently there's a bug that the file won't get created the first time after the folder is created.
+        // so the user has to perform the action twice
+        IPath fullPath = destinationFile.getLocation();
+        if (fullPath.toFile().getParentFile().mkdirs())
         {
-          // currently there's a bug that the file won't get created the first time after the folder is created.
-          // so the user has to perform the action twice
-          IPath fullPath = destinationFile.getLocation();
-          if (fullPath.toFile().getParentFile().mkdirs())
-          {
-            // create Eclipse resource so that the create file doesn't blow chunks
-            destinationFile.getProject().getFile(destinationFile.getParent().getProjectRelativePath()).refreshLocal(IFile.DEPTH_ZERO, null);
-          }
-          String initialContent = cakePHPFile.getInitialContents();
-          byte[] initialBytes = new byte[0];
-          if (initialContent != null)
-          {
-            initialBytes = initialContent.getBytes();
-          }
-          destinationFile.create(new ByteArrayInputStream(initialBytes), false, null);
+          // create Eclipse resource so that the create file doesn't blow chunks
+          destinationFile.getProject().getFile(destinationFile.getParent().getProjectRelativePath()).refreshLocal(IFile.DEPTH_ZERO, null);
         }
-        if (destinationFile.exists())
+        String initialContent = cakePHPFile.getInitialContents();
+        byte[] initialBytes = new byte[0];
+        if (initialContent != null)
         {
-          IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), destinationFile);
+          initialBytes = initialContent.getBytes();
         }
+        destinationFile.create(new ByteArrayInputStream(initialBytes), false, null);
+      }
+      if (destinationFile.exists())
+      {
+        IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), destinationFile);
       }
       return true;
     }
