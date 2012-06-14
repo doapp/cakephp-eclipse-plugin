@@ -11,10 +11,21 @@ import com.doapps.cakephp.files.CakeVersion;
  */
 public class CakeVersion2 extends CakeVersion
 {
+  private static CakeVersion2 instance = null;
+  
   // so only this package com implement it
   CakeVersion2()
   {
     super("2");
+  }
+
+  public static CakeVersion2 getInstance()
+  {
+    if (instance == null)
+    {
+      instance = new CakeVersion2();
+    }
+    return instance;
   }
 
   public String getAppDir() { 
