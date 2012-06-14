@@ -58,6 +58,22 @@ public class CakePHPProject implements ICakePHPProject
     {
       return new Model(this, file);
     }
+    else if (isController(file))
+    {
+      return new Controller(this, file);
+    }
+    else if (isElement(file)) // order matters, this needs to be ahead of view, because it's parent folder is View
+    {
+      return new Element(this, file);
+    }
+    else if (isView(file))
+    {
+      return new View(this, file);
+    }
+    else if (isJSFile(file))
+    {
+      return new JSFile(this, file);
+    }
     
     return null;
   }
@@ -65,7 +81,7 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public boolean isModel(IFile file)
   {
-    return isInFolderAndNameMatches(file, getModelFolderRegex(), getModelFileRegex());
+    return hasParentFolderAndNameMatches(file, getModelFileRegex(), getModelFolderRegex(), 1);
   }
 
   private Pattern getModelFolderRegex()
@@ -82,30 +98,46 @@ public class CakePHPProject implements ICakePHPProject
     return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
   }
   
-  private boolean isInFolderAndNameMatches(IFile file, Pattern folderPattern, Pattern filePattern)
+  private boolean hasParentFolderAndNameMatches(IFile file, Pattern filePattern, Pattern folderPattern, int maxParentsToCheck)
   {
     if (file == null)
     {
       return false;
     }
     
-    IPath filePath = file.getProjectRelativePath();
-    int segmentCount = filePath.segmentCount();
-    if (segmentCount < 2)
+    String fileName = file.getName();
+    boolean isFile = filePattern.matcher(fileName).matches();
+    // file name doesn't match, can't be what we are looking for
+    if (!isFile)
     {
       return false;
     }
-    String folderName = filePath.segment(segmentCount - 2);
-    String fileName = file.getName();
-    boolean isFolder = folderPattern.matcher(folderName).matches();
-    boolean isFile = filePattern.matcher(fileName).matches();
-    return isFolder && isFile;
+    // just checking file name, not checking parent folder
+    if (maxParentsToCheck < 1)
+    {
+      return true;
+    }
+    
+    IPath filePath = file.getProjectRelativePath();
+    int segmentCount = filePath.segmentCount();
+    // (segmentCount - 2) ....... 3....2....1
+    int folderStart = segmentCount - 2;
+    for (int i = 0; i < maxParentsToCheck && i < folderStart; ++i)
+    {
+      String folderName = filePath.segment(folderStart - i);
+      boolean folderMatches = folderPattern.matcher(folderName).matches();
+      if (folderMatches)
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
   public boolean isController(IFile file)
   {
-    return isInFolderAndNameMatches(file, getControllerFolderRegex(), getControllerFileRegex());
+    return hasParentFolderAndNameMatches(file, getControllerFileRegex(), getControllerFolderRegex(), 1);
   }
 
   private Pattern getControllerFolderRegex()
@@ -119,6 +151,71 @@ public class CakePHPProject implements ICakePHPProject
   {
     // TODO: get Controller folder name from preferences
     String fileRegex = ".*Controller\\.php";
+    return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
+  }
+
+  @Override
+  public boolean isView(IFile file)
+  {
+    // TODO: read max parents to check from project settings..cake 1.x -> 1,, 2.x -> 2
+    int maxParentsToCheck = 2;
+    return hasParentFolderAndNameMatches(file, getViewFileRegex(), getViewFolderRegex(), maxParentsToCheck);    
+  }
+
+  private Pattern getViewFolderRegex()
+  {
+    // TODO: get Controller folder name from preferences
+    String folderName = "View";
+    return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
+  }
+
+  private Pattern getViewFileRegex()
+  {
+    // TODO: get Controller folder name from preferences
+    String fileRegex = ".*\\.ctp";
+    return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
+  }
+
+  @Override
+  public boolean isJSFile(IFile file)
+  {
+    // TODO: read max parents to check from project settings..cake 1.x -> 1,, 2.x -> 2
+    int maxParentsToCheck = 2;
+    return hasParentFolderAndNameMatches(file, getJSFileRegex(), getJSFolderRegex(), maxParentsToCheck);    
+  }
+
+  private Pattern getJSFolderRegex()
+  {
+    // TODO: get Controller folder name from preferences
+    String folderName = "js";
+    return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
+  }
+
+  private Pattern getJSFileRegex()
+  {
+    // TODO: get Controller folder name from preferences
+    String fileRegex = ".*\\.js";
+    return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
+  }
+
+  @Override
+  public boolean isElement(IFile file)
+  {
+    int maxParentsToCheck = 1;
+    return hasParentFolderAndNameMatches(file, getElementFileRegex(), getElementFolderRegex(), maxParentsToCheck);    
+  }
+
+  private Pattern getElementFolderRegex()
+  {
+    // TODO: get Controller folder name from preferences
+    String folderName = "Elements";
+    return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
+  }
+
+  private Pattern getElementFileRegex()
+  {
+    // TODO: get Controller folder name from preferences
+    String fileRegex = ".*\\.ctp";
     return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
   }
 
@@ -160,7 +257,33 @@ public class CakePHPProject implements ICakePHPProject
     
     if (file != null)
     {
-      return getCakePHPFile(file);
+      ICakePHPFile currentFile = getCakePHPFile(file);
+      if (currentFile != null)
+      {
+        switch (currentFile.getCakePHPFileType())
+        {
+          case MODEL:
+          {
+            return getController(currentFile);
+          }
+          case CONTROLLER:
+          {
+            break;
+          }
+          case VIEW:
+          {
+            return getModel(currentFile);
+          }
+          case JSFILE:
+          {
+            break;
+          }
+          case ELEMENT:
+          {
+            break;
+          }
+        }
+      }
     }
     return null;
   }
@@ -276,8 +399,30 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public IController getController(ICakePHPFile file)
   {
-    // TODO Auto-generated method stub
-    return null;
+    switch (file.getCakePHPFileType())
+    {
+      case MODEL:
+      {
+        return getController(file);
+      }
+      case CONTROLLER:
+      {
+        break;
+      }
+      case VIEW:
+      {
+        //return getModel(file);
+        break;
+      }
+      case JSFILE:
+      {
+        break;
+      }
+      case ELEMENT:
+      {
+        break;
+      }
+    }
   }
 
   @Override

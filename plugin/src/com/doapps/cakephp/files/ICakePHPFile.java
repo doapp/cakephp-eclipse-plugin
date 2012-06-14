@@ -12,4 +12,5 @@ public interface ICakePHPFile
 
   public String getInitialContents();
   
+  public CakePHPFileType getCakePHPFileType();
 }
