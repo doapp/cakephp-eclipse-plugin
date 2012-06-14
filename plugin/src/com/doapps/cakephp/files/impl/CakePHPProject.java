@@ -423,6 +423,7 @@ public class CakePHPProject implements ICakePHPProject
         break;
       }
     }
+    return null;
   }
 
   @Override
