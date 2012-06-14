@@ -3,7 +3,25 @@
  */
 package com.doapps.cakephp.files.impl;
 
+import java.io.File;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IAdapterManager;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.EditorsUI;
+
+import com.doapps.cakephp.Activator;
+import com.doapps.cakephp.files.CakePHPContsants;
 import com.doapps.cakephp.files.CakeVersion;
+import com.doapps.cakephp.preferences.PreferenceConstants;
+import com.doapps.cakephp.util.FileUtils;
 
 /**
  * @author ryan
@@ -11,42 +29,33 @@ import com.doapps.cakephp.files.CakeVersion;
  */
 public class CakeVersion2 extends CakeVersion
 {
-  private static CakeVersion2 instance = null;
-  
-  // so only this package com implement it
-  private CakeVersion2()
-  {
-    super("2");
-  }
+	private static CakeVersion2 instance = null;
 
-  public static CakeVersion2 getInstance()
-  {
-    if (instance == null)
-    {
-      instance = new CakeVersion2();
-    }
-    return instance;
-  }
+	// so only this package com implement it
+	private CakeVersion2()
+	{
+		super("2.X");
+	}
 
-  public String getAppDir() { 
-		return getCurrentProjectDir() + getAppDirName();
+	public static CakeVersion2 getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new CakeVersion2();
+		}
+		return instance;
+	}
+
+	public String getDefaultAppDir() {
+		return getCurrentProjectDir() + File.separator + getAppDirName();
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getDefaultAppDir()
 	 */
 	public String getAppDirName() {
-		//TODO: look up if they have a proj specific property, otherwise fall back to window pref, otherwise hardcode 'app'
 		return "app";
 	}	
-
-	/* (non-Javadoc)
-	 * @see com.doapps.cakephp.files.ICakeVersion#getModelDir()
-	 */
-	public String getModelDir() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getModelDirName()
@@ -56,26 +65,14 @@ public class CakeVersion2 extends CakeVersion
 	}
 
 	/* (non-Javadoc)
-	 * @see com.doapps.cakephp.files.ICakeVersion#getViewDir()
-	 */
-	public String getViewDir() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getViewDirName()
 	 */
 	public String getViewDirName() {
 		return "View";
 	}
-
-	/* (non-Javadoc)
-	 * @see com.doapps.cakephp.files.ICakeVersion#getControllerDir()
-	 */
-	public String getControllerDir() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public String getElementDirName() {
+		return "Elements";
 	}
 
 	/* (non-Javadoc)
@@ -83,5 +80,9 @@ public class CakeVersion2 extends CakeVersion
 	 */
 	public String getControllerDirName() {
 		return "Controller";
+	}
+	
+	public String getControllerFileNameSuffix() {
+		return "Controller\\.php";
 	}
 }

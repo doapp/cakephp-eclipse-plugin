@@ -6,8 +6,10 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -19,18 +21,19 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.xicabin.cakephp.util.Inflector;
 
+import com.doapps.cakephp.files.CakeVersion;
 import com.doapps.cakephp.files.ICakeAction;
 import com.doapps.cakephp.files.ICakePHPFile;
 import com.doapps.cakephp.files.ICakePHPProject;
 import com.doapps.cakephp.files.IController;
 import com.doapps.cakephp.files.IModel;
+import com.doapps.cakephp.preferences.PreferenceConstants;
+import com.doapps.cakephp.util.FileUtils;
 
 public class CakePHPProject implements ICakePHPProject
 {
   private IProject project;
-  
-  
-
+    
   public CakePHPProject(IProject project)
   {
     this.project = project;
@@ -46,6 +49,15 @@ public class CakePHPProject implements ICakePHPProject
   public IFile getFile(IPath path)
   {
     return this.project.getFile(path);
+  }
+  
+  /**
+   * Get the CakePHP Verison object for this project
+   * @return
+   */
+  public CakeVersion getCakePHPVersion() {
+	  String cakeVersionString = FileUtils.getProjectPropertyOrWorkspacePref(PreferenceConstants.P_CAKE_VER);
+	  return CakeVersion.getVersion(cakeVersionString);
   }
   
   public ICakePHPFile getCakePHPFile(IFile file)
@@ -87,14 +99,12 @@ public class CakePHPProject implements ICakePHPProject
 
   private Pattern getModelFolderRegex()
   {
-    // TODO: get Controller folder name from preferences
-    String folderName = "Model";
+    String folderName = getCakePHPVersion().getModelDirName();
     return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
   }
 
   private Pattern getModelFileRegex()
   {
-    // TODO: get Controller folder name from preferences
     String fileRegex = ".*\\.php";
     return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
   }
@@ -143,15 +153,12 @@ public class CakePHPProject implements ICakePHPProject
 
   private Pattern getControllerFolderRegex()
   {
-    // TODO: get Controller folder name from preferences
-    String folderName = "Controller";
-    return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
+    return Pattern.compile(getCakePHPVersion().getControllerDirName(), Pattern.CASE_INSENSITIVE);
   }
 
   private Pattern getControllerFileRegex()
   {
-    // TODO: get Controller folder name from preferences
-    String fileRegex = ".*Controller\\.php";
+    String fileRegex = ".*" + getCakePHPVersion().getControllerFileNameSuffix();
     return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
   }
 
@@ -165,14 +172,11 @@ public class CakePHPProject implements ICakePHPProject
 
   private Pattern getViewFolderRegex()
   {
-    // TODO: get Controller folder name from preferences
-    String folderName = "View";
-    return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
+    return Pattern.compile(getCakePHPVersion().getViewDirName(), Pattern.CASE_INSENSITIVE);
   }
 
   private Pattern getViewFileRegex()
   {
-    // TODO: get Controller folder name from preferences
     String fileRegex = ".*\\.ctp";
     return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
   }
@@ -187,14 +191,12 @@ public class CakePHPProject implements ICakePHPProject
 
   private Pattern getJSFolderRegex()
   {
-    // TODO: get Controller folder name from preferences
     String folderName = "js";
     return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
   }
 
   private Pattern getJSFileRegex()
   {
-    // TODO: get Controller folder name from preferences
     String fileRegex = ".*\\.js";
     return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
   }
@@ -208,14 +210,11 @@ public class CakePHPProject implements ICakePHPProject
 
   private Pattern getElementFolderRegex()
   {
-    // TODO: get Controller folder name from preferences
-    String folderName = "Elements";
-    return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
+    return Pattern.compile(getCakePHPVersion().getElementDirName(), Pattern.CASE_INSENSITIVE);
   }
 
   private Pattern getElementFileRegex()
   {
-    // TODO: get Controller folder name from preferences
     String fileRegex = ".*\\.ctp";
     return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
   }
@@ -342,15 +341,13 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public IPath getWebrootFolder()
   {
-    // TODO: read webroot from preferences...allow project specific preferences too
     String webroot = "webroot";
     return getAppFolder().append(webroot);
   }
 
   @Override
   public IPath getJSRootFolder()
-  {
-    // TODO: read from preferences...allow project specific preferences too
+  {   
     String jsRootName = "js";
     return getWebrootFolder().append(jsRootName);
   }
@@ -358,7 +355,6 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public IPath getJSFolder(IController controller)
   {
-    // TODO: read from preferences...allow project specific preferences too
     String jsFolderName = controller.getName();
     return getJSRootFolder().append(jsFolderName);
   }
@@ -366,9 +362,8 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public IPath getViewRootFolder()
   {
-    // TODO: read from preferences...allow project specific preferences too
-    String viewRoot = "View";
-    return getAppFolder().append(viewRoot);
+    
+    return getCakePHPVersion().getViewDir();
   }
 
   @Override
@@ -391,7 +386,7 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public IFile getViewFile(IController controller, ICakeAction action)
   {
-    // TODO: get js file name
+    // TODO: open view file and controller from CakeVersion
     String viewFolderName = action.getName();
     IPath viewFilePath = getViewFolder(controller).append(viewFolderName);
     return this.project.getFile(viewFilePath);
@@ -399,11 +394,9 @@ public class CakePHPProject implements ICakePHPProject
 
   private IPath getControllerFolder()
   {
-    String controllerFolderName = "Controller";
-    // TODO: get from version class
-    IPath appFolder = getAppFolder();
-    IPath controllerFolder = appFolder.append(controllerFolderName);
-    return controllerFolder;
+	  Path path = new Path(getCakePHPVersion().getControllerDir());
+	  IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
+	  return file.getLocation();
   }
   
   private String getControllerNameForModel(IModel model)
@@ -430,10 +423,9 @@ public class CakePHPProject implements ICakePHPProject
   
   private IPath getModelFolder()
   {
-    String folderName = "Model";
-    // TODO: get from version class
-    IPath appFolder = getAppFolder();
-    return appFolder.append(folderName);
+	  Path path = new Path(getCakePHPVersion().getModelDir());
+	  IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
+	  return file.getLocation();
   }
   
   private String getModelNameForController(IController controller)
@@ -514,16 +506,17 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public IPath getAppFolder()
   {
-    // TODO Auto-generated method stub
-    // TODO: read from project preferences
-    return this.project.getProjectRelativePath().append("webapp").append("app");
+	  Path appPath = new Path(getCakePHPVersion().getAppDir());
+	  IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(appPath);
+	  return file.getLocation();
   }
 
   @Override
   public IPath getViewFolder(IController controller)
   {
-    // TODO Auto-generated method stub
-    return null;
+	  Path path = new Path(getCakePHPVersion().getViewDir());
+	  IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
+	  return file.getLocation().append(controller.getName());
   }
 
 }

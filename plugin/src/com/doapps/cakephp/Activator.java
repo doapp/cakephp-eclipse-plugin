@@ -4,6 +4,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.doapps.cakephp.files.impl.CakeVersion1;
+import com.doapps.cakephp.files.impl.CakeVersion2;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -21,6 +24,11 @@ public class Activator extends AbstractUIPlugin {
 	public Activator() {
         if (plugin == null)
         	plugin = this;
+        
+        //Search for all the available Cake version objects
+        //TODO: figure out these dynamically - package introspection?
+        CakeVersion2.getInstance();
+        CakeVersion1.getInstance();
 	}
 
 	/*

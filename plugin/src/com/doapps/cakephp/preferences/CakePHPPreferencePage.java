@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import com.doapps.cakephp.Activator;
+import com.doapps.cakephp.files.CakeVersion;
 
 /**
  * This class represents a preference page that
@@ -36,11 +37,21 @@ public class CakePHPPreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
+		//Setup a key value in format: {{"2.1","2.1"},{"1.3","1.3"}}	
+		String[][] tmpVersionsKeyValueList = new String[CakeVersion.getVersions().size()][2];
+				
+		int i=0;
+		for (String s : CakeVersion.getVersions()) {
+			tmpVersionsKeyValueList[i][0] = tmpVersionsKeyValueList[i][1] = s;
+			i++;
+		}
+		
+		CakeVersion.getVersions();
 		addField(new ComboFieldEditor(PreferenceConstants.P_CAKE_VER,
-				"&CakePHP Version", PreferenceConstants.cakeVersionsKeyValueList, getFieldEditorParent()));
+				"&CakePHP Version", tmpVersionsKeyValueList, getFieldEditorParent()));
 
-		addField(new DirectoryFieldEditor(PreferenceConstants.P_APP_DIR,
-				"&App folder (APP_DIR):", getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.P_APP_DIR,
+				"&App folder (relative to project):", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)
