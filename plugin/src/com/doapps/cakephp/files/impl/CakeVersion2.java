@@ -1,22 +1,23 @@
 /**
  * 
  */
-package com.doapps.cakephp.files;
+package com.doapps.cakephp.files.impl;
+
+import com.doapps.cakephp.files.CakeVersion;
 
 /**
  * @author ryan
  *
  */
-public class CakeVersion21 extends CakeVersion {
-	
-	/* (non-Javadoc)
-	 * @see com.doapps.cakephp.files.ICakeVersion#getVersion()
-	 */
-	public String getVersion() {
-		return "2.1";
-	}
+public class CakeVersion2 extends CakeVersion
+{
+  // so only this package com implement it
+  CakeVersion2()
+  {
+    super("2");
+  }
 
-	public String getAppDir() { 
+  public String getAppDir() { 
 		return getCurrentProjectDir() + getAppDirName();
 	}
 	
