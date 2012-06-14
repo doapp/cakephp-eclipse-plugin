@@ -1,14 +1,8 @@
 package com.doapps.cakephp.properties;
 
-import java.util.Iterator;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,18 +15,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import com.doapps.cakephp.preferences.PreferenceConstants;
 
 public class CakePHPPropertyPage extends PropertyPage {
-
-	private static final String OWNER_TITLE = "&Owner:";
-	private static final String OWNER_PROPERTY = "OWNER";
-	private static final String DEFAULT_OWNER = "John Doe";
-
 	private static final int TEXT_FIELD_WIDTH = 50;
 
 	private Text cakeAppDir;
@@ -126,29 +113,6 @@ public class CakePHPPropertyPage extends PropertyPage {
 		separator.setLayoutData(gridData);
 	}
 
-//	private void addSecondSection(Composite parent) {
-//		Composite composite = createDefaultComposite(parent);
-//
-//		// Label for owner field
-//		Label ownerLabel = new Label(composite, SWT.NONE);
-//		ownerLabel.setText(OWNER_TITLE);
-//
-//		// Owner text field
-//		ownerText = new Text(composite, SWT.SINGLE | SWT.BORDER);
-//		GridData gd = new GridData();
-//		gd.widthHint = convertWidthInCharsToPixels(TEXT_FIELD_WIDTH);
-//		ownerText.setLayoutData(gd);
-//
-//		// Populate owner text field
-//		try {
-//			String owner =
-//				((IResource) getElement()).getPersistentProperty(
-//					new QualifiedName("", OWNER_PROPERTY));
-//			ownerText.setText((owner != null) ? owner : DEFAULT_OWNER);
-//		} catch (CoreException e) {
-//			ownerText.setText(DEFAULT_OWNER);
-//		}
-//	}
 
 	private Composite createDefaultComposite(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NULL);
@@ -166,11 +130,8 @@ public class CakePHPPropertyPage extends PropertyPage {
 
 	protected void performDefaults() {
 		super.performDefaults();
-		// Populate the owner text field with the default value
 		cakeAppDir.setText(PreferenceConstants.DEFAULT_APP_DIR);
 		cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
-//		int blah = cakeVersion.getSelectionIndex();
-//		cakeVersion.select(0);
 	}
 	
 	public boolean performOk() {
