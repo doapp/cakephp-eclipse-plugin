@@ -125,5 +125,14 @@
             class="com.doapps.cakephp.preferences.PreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="com.doapps.cakephp.properties.CakePHPPropertyPage"
+            id="com.doapps.cakephp.properties.samplePropertyPage"
+            name="CakePHP project"
+            objectClass="org.eclipse.core.resources.IProject">
+      </page>
+   </extension>
 
 </plugin>

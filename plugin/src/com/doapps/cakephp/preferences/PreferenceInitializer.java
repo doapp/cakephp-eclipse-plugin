@@ -17,8 +17,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		store.setDefault(PreferenceConstants.P_APP_FOLDER_NAME,"app");
-		store.setDefault(PreferenceConstants.P_CAKE_VER,"2.1");
+		store.setDefault(PreferenceConstants.P_APP_DIR,PreferenceConstants.DEFAULT_APP_DIR);
+		store.setDefault(PreferenceConstants.P_CAKE_VER,PreferenceConstants.DEFAULT_CAKE_VER);
 	}
 
 }

@@ -36,17 +36,11 @@ public class CakePHPPreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		String[][] labelsAndValues = new String[2][2];
-		labelsAndValues[0][0] = "2.1";
-		labelsAndValues[0][1] = "2.1";
-		labelsAndValues[1][0] = "1.3";
-		labelsAndValues[1][1] = "1.3";
-
 		addField(new ComboFieldEditor(PreferenceConstants.P_CAKE_VER,
-				"&CakePHP Version", labelsAndValues, getFieldEditorParent()));
+				"&CakePHP Version", PreferenceConstants.cakeVersionsKeyValueList, getFieldEditorParent()));
 
-		addField(new StringFieldEditor(PreferenceConstants.P_APP_FOLDER_NAME,
-				"&App folder name (APP_DIR name):", getFieldEditorParent()));
+		addField(new DirectoryFieldEditor(PreferenceConstants.P_APP_DIR,
+				"&App folder (APP_DIR):", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)
