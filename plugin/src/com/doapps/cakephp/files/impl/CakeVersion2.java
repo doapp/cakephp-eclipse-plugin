@@ -14,7 +14,7 @@ public class CakeVersion2 extends CakeVersion
   private static CakeVersion2 instance = null;
   
   // so only this package com implement it
-  CakeVersion2()
+  private CakeVersion2()
   {
     super("2");
   }
