@@ -17,6 +17,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.xicabin.cakephp.util.Inflector;
 
 import com.doapps.cakephp.files.ICakeAction;
 import com.doapps.cakephp.files.ICakePHPFile;
@@ -268,7 +269,7 @@ public class CakePHPProject implements ICakePHPProject
           }
           case CONTROLLER:
           {
-            break;
+            return getModel(currentFile);
           }
           case VIEW:
           {
@@ -396,6 +397,60 @@ public class CakePHPProject implements ICakePHPProject
     return this.project.getFile(viewFilePath);
   }
 
+  private IPath getControllerFolder()
+  {
+    String controllerFolderName = "Controller";
+    // TODO: get from version class
+    IPath appFolder = getAppFolder();
+    IPath controllerFolder = appFolder.append(controllerFolderName);
+    return controllerFolder;
+  }
+  
+  private String getControllerNameForModel(IModel model)
+  {
+    // TODO: is this different for versions?  I don't think so
+    // 1.x: test -> tests
+    // 2.x: Test -> Tests
+    return Inflector.pluralize(model.getName());
+  }
+  
+  private IController getController(String name)
+  {
+    // TODO: use actual version object
+    int version = 2;
+    String suffix = "Controller.php";
+    if (version < 2)
+    {
+      suffix = "_controller.php";
+    }
+    IPath filePath = getControllerFolder().append(name + suffix);
+    IController controller = new Controller(this, this.project.getFile(filePath));
+    return controller;
+  }
+  
+  private IPath getModelFolder()
+  {
+    String folderName = "Model";
+    // TODO: get from version class
+    IPath appFolder = getAppFolder();
+    return appFolder.append(folderName);
+  }
+  
+  private String getModelNameForController(IController controller)
+  {
+    // TODO: is this different for versions?  I don't think so
+    // 1.x: test -> tests
+    // 2.x: Test -> Tests
+    return Inflector.singularize(controller.getName());
+  }
+  
+  private IModel getModel(String name)
+  {
+    String extension = "php";
+    IPath filePath = getModelFolder().append(name).addFileExtension(extension);
+    return new Model(this, this.project.getFile(filePath));
+  }
+  
   @Override
   public IController getController(ICakePHPFile file)
   {
@@ -403,16 +458,16 @@ public class CakePHPProject implements ICakePHPProject
     {
       case MODEL:
       {
-        return getController(file);
+        return getController(getControllerNameForModel((IModel) file));
       }
       case CONTROLLER:
       {
-        break;
+        // just return the same controller
+        return (IController) file;
       }
       case VIEW:
       {
-        //return getModel(file);
-        break;
+        //return getModel(getModelNameForController((IController) file));
       }
       case JSFILE:
       {
@@ -429,7 +484,30 @@ public class CakePHPProject implements ICakePHPProject
   @Override
   public IModel getModel(ICakePHPFile file)
   {
-    // TODO Auto-generated method stub
+    switch (file.getCakePHPFileType())
+    {
+      case MODEL:
+      {
+        // just return same file
+        return (IModel) file;
+      }
+      case CONTROLLER:
+      {
+        return getModel(getModelNameForController((IController) file));
+      }
+      case VIEW:
+      {
+        break;
+      }
+      case JSFILE:
+      {
+        break;
+      }
+      case ELEMENT:
+      {
+        break;
+      }
+    }
     return null;
   }
 
@@ -437,7 +515,8 @@ public class CakePHPProject implements ICakePHPProject
   public IPath getAppFolder()
   {
     // TODO Auto-generated method stub
-    return null;
+    // TODO: read from project preferences
+    return this.project.getProjectRelativePath().append("webapp").append("app");
   }
 
   @Override

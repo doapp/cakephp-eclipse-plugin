@@ -13,7 +13,6 @@ package com.doapps.cakephp.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.ITextSelection;
@@ -26,7 +25,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.doapps.cakephp.files.ICakePHPProject;
 import com.doapps.cakephp.files.impl.CakePHPProject;
-import com.doapps.cakephp.util.CakePHPHelper;
 
 /**
  * @author jeremy

@@ -1,5 +1,7 @@
 package com.doapps.cakephp.files.impl;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.core.resources.IFile;
 
 import com.doapps.cakephp.files.CakePHPFileType;
@@ -26,5 +28,11 @@ public class Controller extends CakePHPFile implements IController
     return CakePHPFileType.CONTROLLER;
   }
   
-
+  @Override
+  public Pattern getNamePattern()
+  {
+    // TODO: get from version class
+    return Pattern.compile("(.*)Controller\\..*");
+    //return Pattern.compile("\\(.*\\)_controller\\..*");
+  }
 }
