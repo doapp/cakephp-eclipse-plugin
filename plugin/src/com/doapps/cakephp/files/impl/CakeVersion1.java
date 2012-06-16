@@ -3,8 +3,6 @@
  */
 package com.doapps.cakephp.files.impl;
 
-import java.io.File;
-
 import com.doapps.cakephp.files.CakeVersion;
 
 /**
@@ -29,11 +27,7 @@ public class CakeVersion1 extends CakeVersion
 		}
 		return instance;
 	}
-
-	public String getDefaultAppDir() {
-		return getCurrentProjectDir() + File.separator + getAppDirName();
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getDefaultAppDir()
 	 */
@@ -49,6 +43,10 @@ public class CakeVersion1 extends CakeVersion
 		return "models";
 	}
 
+	public String constructModelName(String name) {
+	    return name.toLowerCase() + ".php";
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getViewDirName()
 	 */
@@ -69,5 +67,9 @@ public class CakeVersion1 extends CakeVersion
 	
 	public String getControllerFileNameSuffix() {
 		return "_controller\\.php";
+	}
+	
+	public String constructControllerName(String name) {
+		return name + "_controller.php";
 	}
 }

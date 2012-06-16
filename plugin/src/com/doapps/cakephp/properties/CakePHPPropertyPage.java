@@ -3,16 +3,17 @@ package com.doapps.cakephp.properties;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -98,7 +99,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 		
 		//APP_DIR directory selector
 		Label appNameLabel = new Label(composite, SWT.NONE);
-		appNameLabel.setText("App folder (APP_DIR):");		
+		appNameLabel.setText("App folder (rel to project):");		
 		cakeAppDir = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		cakeAppDir.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		GridData gd = new GridData();
@@ -107,22 +108,22 @@ public class CakePHPPropertyPage extends PropertyPage {
 
 		try {
 			String appFolder =	((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
-			cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getAppDir());
+			cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getAppDirName());
 		} catch (CoreException e) {
-			cakeAppDir.setText(CakeVersion.getVersion(cakeVersion.getText()).getAppDir());
+			cakeAppDir.setText(CakeVersion.getVersion(cakeVersion.getText()).getAppDirName());
 		}
 				
-	    Button browseFS = new Button(composite, SWT.PUSH);
-	    browseFS.setText("Browse"); //$NON-NLS-1$
-	    browseFS.addSelectionListener(new SelectionAdapter() {
-	      public void widgetSelected(SelectionEvent evt) {
-	        DirectoryDialog dlg = new DirectoryDialog(cakeVersion.getShell());
-	        dlg.setFilterPath(cakeAppDir.getText());
-	        dlg.setMessage("Select CakePHP app folder (APP_DIR)");
-	        String selectedDir = dlg.open();
-	        cakeAppDir.setText(selectedDir != null ? selectedDir : CakeVersion.getVersion(cakeVersion.getText()).getAppDir());
-	      }
-	    });	   
+//	    Button browseFS = new Button(composite, SWT.PUSH);
+//	    browseFS.setText("Browse"); //$NON-NLS-1$
+//	    browseFS.addSelectionListener(new SelectionAdapter() {
+//	      public void widgetSelected(SelectionEvent evt) {
+//	        DirectoryDialog dlg = new DirectoryDialog(cakeVersion.getShell());
+//	        dlg.setFilterPath(cakeAppDir.getText());
+//	        dlg.setMessage("Select CakePHP app folder (APP_DIR)");
+//	        String selectedDir = dlg.open();
+//	        cakeAppDir.setText(selectedDir != null ? selectedDir : CakeVersion.getVersion(cakeVersion.getText()).getAppDir().toOSString());
+//	      }
+//	    });	   
 	    
 	    
 	    toggleProjectSpecificFields(initialEnableProjSpecificVal);
@@ -176,7 +177,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 	 */
 	protected void performDefaults() {
 		super.performDefaults();
-		cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getDefaultAppDir());
+		cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getAppDirName());
 		cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
 		useProjectSpecificSettings.setSelection(false);
 		toggleProjectSpecificFields(false);

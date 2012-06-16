@@ -28,11 +28,11 @@ public class Controller extends CakePHPFile implements IController
     return CakePHPFileType.CONTROLLER;
   }
   
-  @Override
-  public Pattern getNamePattern()
-  {
-    // TODO: get from version class
-    return Pattern.compile("(.*)Controller\\..*");
-    //return Pattern.compile("\\(.*\\)_controller\\..*");
-  }
+//  @Override
+//  public Pattern getNamePattern()
+//  {
+//    // TODO: get from version class
+//    return Pattern.compile("(.*)Controller\\..*");
+//    //return Pattern.compile("\\(.*\\)_controller\\..*");
+//  }
 }

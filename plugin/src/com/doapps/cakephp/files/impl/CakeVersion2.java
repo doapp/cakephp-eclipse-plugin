@@ -3,25 +3,7 @@
  */
 package com.doapps.cakephp.files.impl;
 
-import java.io.File;
-
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IAdapterManager;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.editors.text.EditorsUI;
-
-import com.doapps.cakephp.Activator;
-import com.doapps.cakephp.files.CakePHPContsants;
 import com.doapps.cakephp.files.CakeVersion;
-import com.doapps.cakephp.preferences.PreferenceConstants;
-import com.doapps.cakephp.util.FileUtils;
 
 /**
  * @author ryan
@@ -30,6 +12,8 @@ import com.doapps.cakephp.util.FileUtils;
 public class CakeVersion2 extends CakeVersion
 {
 	private static CakeVersion2 instance = null;
+	
+	public static String appDirName = "app";
 
 	// so only this package com implement it
 	private CakeVersion2()
@@ -45,16 +29,12 @@ public class CakeVersion2 extends CakeVersion
 		}
 		return instance;
 	}
-
-	public String getDefaultAppDir() {
-		return getCurrentProjectDir() + File.separator + getAppDirName();
-	}
 	
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getDefaultAppDir()
 	 */
 	public String getAppDirName() {
-		return "app";
+		return CakeVersion2.appDirName;
 	}	
 
 	/* (non-Javadoc)
@@ -64,6 +44,12 @@ public class CakeVersion2 extends CakeVersion
 		return "Model";
 	}
 
+	public String constructModelName(String name) {
+		//TODO: make sure 1st char is capital: http://stackoverflow.com/questions/1149855/how-to-upper-case-every-first-letter-of-word-in-a-string
+		//How do we handle something like CoolUser
+	    return name + ".php";
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getViewDirName()
 	 */
@@ -84,5 +70,9 @@ public class CakeVersion2 extends CakeVersion
 	
 	public String getControllerFileNameSuffix() {
 		return "Controller\\.php";
+	}
+	
+	public String constructControllerName(String name) {
+	    return name + "Controller.php";
 	}
 }
