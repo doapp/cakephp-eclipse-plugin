@@ -53,7 +53,7 @@ public class CakePHPProject implements ICakePHPProject
 	}
 
 	/**
-	 * Get the CakePHP Verison object for this project
+	 * Get the CakePHP version object for this project
 	 * @return
 	 */
 	public CakeVersion getCakePHPVersion() {
@@ -67,46 +67,28 @@ public class CakePHPProject implements ICakePHPProject
 			return null;
 		}
 
-		if (isModel(file))
+		if (getCakePHPVersion().isModel(file))
 		{
 			return new Model(this, file);
 		}
-		else if (isController(file))
+		else if (getCakePHPVersion().isController(file))
 		{
 			return new Controller(this, file);
 		}
-		else if (isElement(file)) // order matters, this needs to be ahead of view, because it's parent folder is View
+		else if (getCakePHPVersion().isElement(file)) // order matters, this needs to be ahead of view, because it's parent folder is View
 		{
 			return new Element(this, file);
 		}
-		else if (isView(file))
+		else if (getCakePHPVersion().isView(file))
 		{
 			return new View(this, file);
 		}
-		else if (isJSFile(file))
+		else if (getCakePHPVersion().isJsFile(file))
 		{
 			return new JSFile(this, file);
 		}
 
 		return null;
-	}
-
-	@Override
-	public boolean isModel(IFile file)
-	{
-		return hasParentFolderAndNameMatches(file, getModelFileRegex(), getModelFolderRegex(), 1);
-	}
-
-	private Pattern getModelFolderRegex()
-	{
-		String folderName = getCakePHPVersion().getModelDirName();
-		return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
-	}
-
-	private Pattern getModelFileRegex()
-	{
-		String fileRegex = ".*\\.php";
-		return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
 	}
 
 	private boolean hasParentFolderAndNameMatches(IFile file, Pattern filePattern, Pattern folderPattern, int maxParentsToCheck)
@@ -143,80 +125,6 @@ public class CakePHPProject implements ICakePHPProject
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public boolean isController(IFile file)
-	{
-		return hasParentFolderAndNameMatches(file, getControllerFileRegex(), getControllerFolderRegex(), 1);
-	}
-
-	private Pattern getControllerFolderRegex()
-	{
-		return Pattern.compile(getCakePHPVersion().getControllerDirName(), Pattern.CASE_INSENSITIVE);
-	}
-
-	private Pattern getControllerFileRegex()
-	{
-		String fileRegex = ".*" + getCakePHPVersion().getControllerFileNameSuffix();
-		return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
-	}
-
-	@Override
-	public boolean isView(IFile file)
-	{
-		// TODO: read max parents to check from project settings..cake 1.x -> 1,, 2.x -> 2
-		int maxParentsToCheck = 2;
-		return hasParentFolderAndNameMatches(file, getViewFileRegex(), getViewFolderRegex(), maxParentsToCheck);    
-	}
-
-	private Pattern getViewFolderRegex()
-	{
-		return Pattern.compile(getCakePHPVersion().getViewDirName(), Pattern.CASE_INSENSITIVE);
-	}
-
-	private Pattern getViewFileRegex()
-	{
-		String fileRegex = ".*\\.ctp";
-		return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
-	}
-
-	@Override
-	public boolean isJSFile(IFile file)
-	{
-		// TODO: read max parents to check from project settings..cake 1.x -> 1,, 2.x -> 2
-		int maxParentsToCheck = 2;
-		return hasParentFolderAndNameMatches(file, getJSFileRegex(), getJSFolderRegex(), maxParentsToCheck);    
-	}
-
-	private Pattern getJSFolderRegex()
-	{
-		String folderName = getCakePHPVersion().getJsDirName();
-		return Pattern.compile(folderName, Pattern.CASE_INSENSITIVE);
-	}
-
-	private Pattern getJSFileRegex()
-	{
-		String fileRegex = ".*\\.js";
-		return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
-	}
-
-	@Override
-	public boolean isElement(IFile file)
-	{
-		int maxParentsToCheck = 1;
-		return hasParentFolderAndNameMatches(file, getElementFileRegex(), getElementFolderRegex(), maxParentsToCheck);    
-	}
-
-	private Pattern getElementFolderRegex()
-	{
-		return Pattern.compile(getCakePHPVersion().getElementDirName(), Pattern.CASE_INSENSITIVE);
-	}
-
-	private Pattern getElementFileRegex()
-	{
-		String fileRegex = ".*\\.ctp";
-		return Pattern.compile(fileRegex, Pattern.CASE_INSENSITIVE);
 	}
 
 	@Override

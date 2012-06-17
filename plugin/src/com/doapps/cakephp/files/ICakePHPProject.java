@@ -39,15 +39,5 @@ public interface ICakePHPProject
   public IPath getJsFolder(IController controller);
   
   public IFile getJsFile(IController controller, ICakeAction action);  
-
-  boolean isModel(IFile file);
-
-  boolean isController(IFile file);
-
-  boolean isView(IFile file);
-
-  boolean isJSFile(IFile file);
-
-  boolean isElement(IFile file);
   
 }

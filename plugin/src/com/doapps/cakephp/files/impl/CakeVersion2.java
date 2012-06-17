@@ -3,6 +3,8 @@
  */
 package com.doapps.cakephp.files.impl;
 
+import java.util.regex.Pattern;
+
 import com.doapps.cakephp.files.CakeVersion;
 
 /**
@@ -33,7 +35,7 @@ public class CakeVersion2 extends CakeVersion
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getDefaultAppDir()
 	 */
-	public String getAppDirName() {
+	public String getDefaultAppDirName() {
 		return CakeVersion2.appDirName;
 	}	
 

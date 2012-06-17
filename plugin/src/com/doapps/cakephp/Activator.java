@@ -27,6 +27,8 @@ public class Activator extends AbstractUIPlugin {
         
         //Search for all the available Cake version objects
         //TODO: figure out these dynamically - package introspection?
+        
+        //TODO: figure out how to pass in IProject handle here
         CakeVersion2.getInstance();
         CakeVersion1.getInstance();
 	}

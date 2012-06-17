@@ -31,7 +31,7 @@ public class CakeVersion1 extends CakeVersion
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getDefaultAppDir()
 	 */
-	public String getAppDirName() {
+	public String getDefaultAppDirName() {
 		//TODO: look up if they have a proj specific property, otherwise fall back to window pref, otherwise hardcode 'app'
 		return "app";
 	}	

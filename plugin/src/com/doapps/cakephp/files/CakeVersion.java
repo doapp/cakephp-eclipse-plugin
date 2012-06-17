@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.xicabin.cakephp.util.Inflector;
 
 import com.doapps.cakephp.Activator;
@@ -49,6 +49,7 @@ public abstract class CakeVersion
 		return version;
 	}
 	
+	//TODO: figure out how to pass in IProject handle in Activator. This is only needed cuz window pref and proj prop cant pass in project handle
 	public static CakeVersion getVersion(String name)
 	{
 		CakeVersion version = versions.get(name);
@@ -80,13 +81,22 @@ public abstract class CakeVersion
 	}
 
 	public IFile getAppDir() {
+		String appDir = getAppDirName();
+		if( null != appDir ) {
+			return getProject().getFile(appDir);
+		}
+		//If here, just use the default
+		return getDefaultAppDir();
+	}
+	
+	public String getAppDirName() {
 		String appDir = null;
 
 		try {
 			//First check if they have a proj specific app dir
 			if(FileUtils.isProjectSpecificSettingsEnabled()) {
 				appDir = FileUtils.getProjectProperty(PreferenceConstants.P_APP_DIR);
-				if(null != appDir) return getProject().getFile(appDir);
+				if(null != appDir) return appDir;
 			}
 		} catch (CoreException e) {
 			//Property not found, so not using project specific settings
@@ -94,33 +104,26 @@ public abstract class CakeVersion
 
 		//If we are here, try to get the editor wide preferences app dir
 		appDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_APP_DIR);
-		//Pref app dir is relative to workspace	
-		if( null != appDir ) {
-			return getProject().getFile(appDir);
-		}
-
-		//If here, just use the default
-		return getDefaultAppDir();
+		//Pref app dir is relative to project	
+		if(null != appDir) return appDir;
+		
+		return getDefaultAppDirName();
 	}
 
 	public IFile getDefaultAppDir() {
-		return getProject().getFile(getAppDirName());
+		return getProject().getFile(getDefaultAppDirName());
 	}
 	
-	public abstract String getAppDirName();
+	public abstract String getDefaultAppDirName();
 
 	public IFile getModelDir() {
-		return getProject().getFile(getModelDirName());
+		return getProject().getFile(getAppDirName() + File.separator + getModelDirName());
 	}
 
 	public abstract String getModelDirName();
 
 	public IFile getModel(String name){	
-		int numSegmentsInProjectPath = getProject().getLocation().segmentCount();
-		
-		//remove project path prefix
-		String FileRelToWs = getModelDir().getLocation().append(constructModelName(name)).removeFirstSegments(numSegmentsInProjectPath).toOSString();		
-		return getProject().getFile(FileRelToWs);
+		return getProject().getFile(getModelDir().getProjectRelativePath().append(constructModelName(name)));
 	}
 	
 	/**
@@ -131,7 +134,7 @@ public abstract class CakeVersion
 	public abstract String constructModelName(String name);
 	
 	public IFile getViewDir() {
-		return getProject().getFile(getViewDirName());
+		return getProject().getFile(getAppDirName() + File.separator + getViewDirName());
 	}
 
 	public abstract String getViewDirName();
@@ -167,7 +170,7 @@ public abstract class CakeVersion
 	}
 	
 	public IFile getControllerDir() {
-		return getProject().getFile(getControllerDirName());
+		return getProject().getFile(getAppDirName() + File.separator + getControllerDirName());
 	}
 	
 	public abstract String getControllerDirName();
@@ -175,11 +178,7 @@ public abstract class CakeVersion
 	public abstract String getControllerFileNameSuffix();
 	
 	public IFile getController(String name){		
-		int numSegmentsInProjectPath = getProject().getLocation().segmentCount();
-		
-		//remove project path prefix
-		String controllerFileRelToWs = getControllerDir().getLocation().append(constructControllerName(name)).removeFirstSegments(numSegmentsInProjectPath).toOSString();		
-		return getProject().getFile(controllerFileRelToWs);
+		return getProject().getFile(getControllerDir().getProjectRelativePath().append(constructControllerName(name)));
 	}
 	
 	/**
@@ -238,4 +237,53 @@ public abstract class CakeVersion
 	    return jsFile;
 	}
 	
+	public boolean isModel(IFile file) {
+		//For a model, 2nd to last segment should be <modelDirName>/
+		IPath thePath = file.getProjectRelativePath();
+		int numSegments = thePath.segmentCount();
+		String versionDirName = getModelDirName();
+		
+		//-2 cuz its 0 indexed
+		return (thePath.segment(numSegments - 2).equals(versionDirName));
+	}
+	
+	public boolean isView(IFile file) {
+		//For a model, 2nd to last segment should be <viewDirName>/
+		IPath thePath = file.getProjectRelativePath();
+		int numSegments = thePath.segmentCount();
+		String versionDirName = getViewDirName();
+		
+		//-2 cuz its 0 indexed
+		return (thePath.segment(numSegments - 2).equals(versionDirName));
+	}
+	
+	public boolean isElement(IFile file) {
+		//For a model, 2nd to last segment should be <elementDirName>/
+		IPath thePath = file.getProjectRelativePath();
+		int numSegments = thePath.segmentCount();
+		String versionDirName = getElementDirName();
+		
+		//-2 cuz its 0 indexed
+		return (thePath.segment(numSegments - 2).equals(versionDirName));
+	}
+	
+	public boolean isJsFile(IFile file) {
+		//For a model, 2nd to last segment should be <jsDirName>/
+		IPath thePath = file.getProjectRelativePath();
+		int numSegments = thePath.segmentCount();
+		String versionDirName = getJsDirName();
+		
+		//-2 cuz its 0 indexed
+		return (thePath.segment(numSegments - 2).equals(versionDirName));
+	}
+	
+	public boolean isController(IFile file) {
+		//For a model, 2nd to last segment should be <controllerDirName>/
+		IPath thePath = file.getProjectRelativePath();
+		int numSegments = thePath.segmentCount();
+		String versionDirName = getControllerDirName();
+		
+		//-2 cuz its 0 indexed
+		return (thePath.segment(numSegments - 2).equals(versionDirName));
+	}
 }

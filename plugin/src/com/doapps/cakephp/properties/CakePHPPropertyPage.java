@@ -108,9 +108,9 @@ public class CakePHPPropertyPage extends PropertyPage {
 
 		try {
 			String appFolder =	((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
-			cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getAppDirName());
+			cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
 		} catch (CoreException e) {
-			cakeAppDir.setText(CakeVersion.getVersion(cakeVersion.getText()).getAppDirName());
+			cakeAppDir.setText(CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
 		}
 				
 //	    Button browseFS = new Button(composite, SWT.PUSH);
@@ -177,7 +177,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 	 */
 	protected void performDefaults() {
 		super.performDefaults();
-		cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getAppDirName());
+		cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getDefaultAppDirName());
 		cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
 		useProjectSpecificSettings.setSelection(false);
 		toggleProjectSpecificFields(false);
