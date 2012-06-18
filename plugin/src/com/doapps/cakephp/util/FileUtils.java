@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,6 +30,36 @@ import com.doapps.cakephp.preferences.PreferenceConstants;
  */
 public class FileUtils {
 	
+  public static String getSelectedText()
+  {
+    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    if (null == page)
+    {
+      return null;
+    }
+    String text = null;
+    ISelection selection = page.getSelection();
+    if (selection instanceof ITextSelection)
+    {
+      text = ((ITextSelection) selection).getText();
+    }
+    else if (selection instanceof IStructuredSelection)
+    {
+      Object element = ((IStructuredSelection) selection).getFirstElement();
+      if (element instanceof IMethod)
+      {
+        String fullyQualifiedName = ((IMethod) element).getFullyQualifiedName();
+        String[] split = fullyQualifiedName.split("\\$");
+        if (split.length > 1)
+        {
+          return split[1];
+        }
+      }
+      return null;
+    }
+    return text;
+  }
+  
 	static public IProject getProjectForSelection()
 	  {
 	    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -52,6 +83,12 @@ public class FileUtils {
 	        }
 	      }
 	      // TODO: are there other types of selections
+	    }
+	    
+	    IFile file = getSelectedFile();
+	    if (file != null)
+	    {
+	      return file.getProject();
 	    }
 	    return null;
 	  }
@@ -149,4 +186,41 @@ public class FileUtils {
 //	    }
 //	    return value;
 	}
+
+  public static IFile getSelectedFile()
+  {
+    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    if (page == null)
+    {
+      return null;
+    }
+    IFile file = null;
+    ISelection selection = page.getSelection();
+
+    if (selection instanceof ITextSelection)
+    {
+      IEditorInput editorInput = page.getActiveEditor().getEditorInput();
+      if (editorInput instanceof IFileEditorInput)
+      {
+        file = ((IFileEditorInput) editorInput).getFile();
+      }
+    }
+    else if (selection instanceof IStructuredSelection && !selection.isEmpty())
+    {
+      Object element = ((IStructuredSelection) selection).getFirstElement();
+      if (element instanceof IFile)
+      {
+        file = (IFile) element;
+      }
+      else if (element instanceof IMethod)
+      {
+        IResource r = ((IMethod) element).getResource();
+        if (r != null)
+        {
+          file = (IFile) r.getAdapter(IFile.class);
+        }
+      }
+    }
+    return file;
+  }
 }

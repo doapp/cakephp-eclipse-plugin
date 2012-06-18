@@ -25,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.doapps.cakephp.files.ICakePHPProject;
 import com.doapps.cakephp.files.impl.CakePHPProject;
+import com.doapps.cakephp.util.FileUtils;
 
 /**
  * @author jeremy
@@ -61,7 +62,7 @@ public class OpenCakePHPFileHandler extends AbstractHandler
   
   private ICakePHPProject getCakePHPProject()
   {
-    return new CakePHPProject(getProjectForSelection());
+    return new CakePHPProject(FileUtils.getProjectForSelection());
   }
   
   /*

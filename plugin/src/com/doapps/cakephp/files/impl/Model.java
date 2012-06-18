@@ -3,12 +3,13 @@ package com.doapps.cakephp.files.impl;
 import org.eclipse.core.resources.IFile;
 
 import com.doapps.cakephp.files.CakePHPFileType;
+import com.doapps.cakephp.files.ICakePHPProject;
 import com.doapps.cakephp.files.IModel;
 
 public class Model extends CakePHPFile implements IModel
 {
 
-  public Model(CakePHPProject project, IFile file)
+  public Model(ICakePHPProject project, IFile file)
   {
     super(project, file);
   }

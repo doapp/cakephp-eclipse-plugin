@@ -1,20 +1,13 @@
 package com.doapps.cakephp.files;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.xicabin.cakephp.util.Inflector;
-
-import com.doapps.cakephp.Activator;
-import com.doapps.cakephp.preferences.PreferenceConstants;
-import com.doapps.cakephp.util.FileUtils;
 
 public abstract class CakeVersion
 {
@@ -132,6 +125,8 @@ public abstract class CakeVersion
 	 */
 	public abstract String constructModelName(String name);
 	
+	public abstract String constructViewName(String controllerName, String action);
+	
 //	public IFile getViewDir() {
 //		return getProject().getFile(getAppDirName() + File.separator + getViewDirName());
 //	}
@@ -220,6 +215,22 @@ public abstract class CakeVersion
 		return Inflector.pluralize(model.getName());
 	}
 	
+  public String getViewNameForAction(String action)
+  {
+    // TODO: is this different for versions?  I don't think so
+    // 1.x: tests_controller.php:index() -> views/tests/index.ctp
+    // 2.x: TestsController.php:index() -> View/Tests/index.ctp
+    return action;
+  }
+  
+  public String getViewFolderNameForController(IController controller)
+  {
+    // TODO: is this different for versions?  I don't think so
+    // 1.x: tests_controller.php:index() -> views/tests/index.ctp
+    // 2.x: TestsController.php:index() -> View/Tests/index.ctp
+    return controller.getName();
+  }
+  
 	/**
 	 * Start of getting things by controller and action
 	 */
@@ -285,4 +296,63 @@ public abstract class CakeVersion
 		//-2 cuz its 0 indexed
 		return (thePath.segment(numSegments - 2).equals(versionDirName));
 	}
+
+  public IPath getRootFolder(ICakePHPFile file)
+  {
+    int segmentCountToRemove = -1;
+    switch (file.getCakePHPFileType())
+    {
+      case MODEL:
+      case CONTROLLER:
+      {
+        // Current format
+        // 2.X: <root >/Model/Test.php
+        // 1.X: <root >/models/Test.php
+        segmentCountToRemove = 2;
+        break;
+      }
+      case ELEMENT:
+      case VIEW:
+      case JSFILE:
+      {
+        // Current format
+        // 2.X: <root >/View/Models/index.ctp
+        // 2.X: <root >/View/Elements/nav.ctp
+        // 2.X: <root >/webroot/js/Model/index.js
+        // 1.X: <root >/View/models/index.ctp
+        // 1.X: <root >/View/elements/nav.ctp
+        // 1.X: <root >/webroot/js/models/index.js
+        segmentCountToRemove = 3;
+        break;
+        
+      }
+    }
+    IPath path = file.getFile().getProjectRelativePath();
+    int segmentCount = path.segmentCount();
+    if ((segmentCountToRemove >= 0) && (segmentCount > segmentCountToRemove))
+    {
+      IPath root = path.removeLastSegments(segmentCountToRemove);
+      return root;
+    }
+    // default to app folder?
+    return null;
+  }
+  
+  public IPath getControllerPath(IPath rootFolder, IModel model)
+  {
+    String controllerFileName = constructControllerName(getControllerNameForModel(model));
+    return rootFolder.append(getControllerDirName()).append(controllerFileName);
+  }
+
+  public IPath getModelPath(IPath rootFolder, IController controller)
+  {
+    String modelFileName = constructModelName(getModelNameForController(controller));
+    return rootFolder.append(getModelDirName()).append(modelFileName);
+  }
+
+  public IPath getViewPath(IPath rootFolder, IController controller, String action)
+  {
+    String viewPath = constructViewName(getViewFolderNameForController(controller), action);
+    return rootFolder.append(getViewDirName()).append(viewPath);
+  }
 }

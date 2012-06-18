@@ -4,9 +4,9 @@ import org.eclipse.core.resources.IFile;
 
 import com.doapps.cakephp.files.CakePHPFileType;
 import com.doapps.cakephp.files.ICakePHPProject;
-import com.doapps.cakephp.files.IController;
+import com.doapps.cakephp.files.IView;
 
-public class View extends CakePHPFile implements IController
+public class View extends CakePHPFile implements IView
 {
   public View(ICakePHPProject project, IFile file)
   {

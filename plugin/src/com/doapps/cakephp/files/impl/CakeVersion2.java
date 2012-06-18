@@ -3,8 +3,6 @@
  */
 package com.doapps.cakephp.files.impl;
 
-import java.util.regex.Pattern;
-
 import com.doapps.cakephp.files.CakeVersion;
 
 /**
@@ -71,10 +69,15 @@ public class CakeVersion2 extends CakeVersion
 	}
 	
 	public String getControllerFileNameSuffix() {
-		return "Controller\\.php";
+		return "Controller.php";
 	}
 	
 	public String constructControllerName(String name) {
-	    return name + "Controller.php";
+	    return name + getControllerFileNameSuffix();
+	}
+	
+	public String constructViewName(String controllerName, String action)
+	{
+	  return controllerName + "/" + action + ".ctp";
 	}
 }

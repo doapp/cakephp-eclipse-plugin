@@ -4,9 +4,9 @@ import org.eclipse.core.resources.IFile;
 
 import com.doapps.cakephp.files.CakePHPFileType;
 import com.doapps.cakephp.files.ICakePHPProject;
-import com.doapps.cakephp.files.IController;
+import com.doapps.cakephp.files.IElement;
 
-public class Element extends CakePHPFile implements IController
+public class Element extends CakePHPFile implements IElement
 {
   public Element(ICakePHPProject project, IFile file)
   {

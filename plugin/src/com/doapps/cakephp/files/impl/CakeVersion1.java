@@ -72,4 +72,9 @@ public class CakeVersion1 extends CakeVersion
 	public String constructControllerName(String name) {
 		return name + "_controller.php";
 	}
+	
+  public String constructViewName(String controllerName, String action)
+  {
+    return controllerName + "/" + action + ".ctp";
+  }
 }

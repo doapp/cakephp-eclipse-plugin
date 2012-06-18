@@ -28,16 +28,16 @@ public interface ICakePHPProject
   
   public IPath getElementsFolder();
   
-  public IFile getViewFile(IController controller, ICakeAction action);
-  
   public IController getController(ICakePHPFile file);  
   
   public IPath getWebrootFolder();
   
-  public IPath getJsFolder();
+  public IPath getJSFolder();
   
-  public IPath getJsFolder(IController controller);
+  public IPath getJSFolder(IController controller);
   
-  public IFile getJsFile(IController controller, ICakeAction action);  
+  public IView getView(ICakePHPFile file, String selectedText);
+
+  public IJSFile getJSFile(IView view);  
   
 }
