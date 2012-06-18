@@ -20,7 +20,7 @@ public class Controller extends CakePHPFile implements IController
   @Override
   public String getInitialContents()
   {
-    // TODO Auto-generated method stub
+    //TODO: run command line Cake console bake (prompt first)
     return null;
   }
 

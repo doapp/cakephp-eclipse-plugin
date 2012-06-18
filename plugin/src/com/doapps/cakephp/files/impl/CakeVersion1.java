@@ -3,31 +3,27 @@
  */
 package com.doapps.cakephp.files.impl;
 
-import java.util.regex.Pattern;
-
 import com.doapps.cakephp.files.CakeVersion;
 
 /**
  * @author ryan
  *
  */
-public class CakeVersion2 extends CakeVersion
+public class CakeVersion1 extends CakeVersion
 {
-	private static CakeVersion2 instance = null;
-	
-	public static String appDirName = "app";
+	private static CakeVersion1 instance = null;
 
 	// so only this package com implement it
-	private CakeVersion2()
+	private CakeVersion1()
 	{
-		super("2.X");
+		super("1.X");
 	}
 
-	public static CakeVersion2 getInstance()
+	public static CakeVersion1 getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new CakeVersion2();
+			instance = new CakeVersion1();
 		}
 		return instance;
 	}
@@ -36,45 +32,44 @@ public class CakeVersion2 extends CakeVersion
 	 * @see com.doapps.cakephp.files.ICakeVersion#getDefaultAppDir()
 	 */
 	public String getDefaultAppDirName() {
-		return CakeVersion2.appDirName;
+		//TODO: look up if they have a proj specific property, otherwise fall back to window pref, otherwise hardcode 'app'
+		return "app";
 	}	
 
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getModelDirName()
 	 */
 	public String getModelDirName() {
-		return "Model";
+		return "models";
 	}
 
 	public String constructModelName(String name) {
-		//TODO: make sure 1st char is capital: http://stackoverflow.com/questions/1149855/how-to-upper-case-every-first-letter-of-word-in-a-string
-		//How do we handle something like CoolUser
-	    return name + ".php";
+	    return name.toLowerCase() + ".php";
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getViewDirName()
 	 */
 	public String getViewDirName() {
-		return "View";
+		return "views";
 	}
 	
 	public String getElementDirName() {
-		return "Elements";
+		return "elements";
 	}
 
 	/* (non-Javadoc)
 	 * @see com.doapps.cakephp.files.ICakeVersion#getControllerDirName()
 	 */
 	public String getControllerDirName() {
-		return "Controller";
+		return "controllers";
 	}
 	
 	public String getControllerFileNameSuffix() {
-		return "Controller\\.php";
+		return "_controller\\.php";
 	}
 	
 	public String constructControllerName(String name) {
-	    return name + "Controller.php";
+		return name + "_controller.php";
 	}
 }

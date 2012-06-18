@@ -15,37 +15,29 @@ public interface ICakePHPProject
   public boolean openNextFile();
   
   public ICakePHPFile getFileToOpen();
-  
-  public IController getController(ICakePHPFile file);
-  
-  public IModel getModel(ICakePHPFile file);
-  
+      
   public IPath getAppFolder();
   
-  public IPath getWebrootFolder();
+  public IPath getModelFolder();
   
-  public IPath getJSRootFolder();
-  
-  public IPath getJSFolder(IController controller);
-  
-  public IPath getViewRootFolder();
+  public IModel getModel(ICakePHPFile file);
+    
+  public IPath getViewFolder();
   
   public IPath getViewFolder(IController controller);
   
   public IPath getElementsFolder();
   
-  public IFile getJSFile(IController controller, ICakeAction action);
-  
   public IFile getViewFile(IController controller, ICakeAction action);
-
-  boolean isModel(IFile file);
-
-  boolean isController(IFile file);
-
-  boolean isView(IFile file);
-
-  boolean isJSFile(IFile file);
-
-  boolean isElement(IFile file);
+  
+  public IController getController(ICakePHPFile file);  
+  
+  public IPath getWebrootFolder();
+  
+  public IPath getJsFolder();
+  
+  public IPath getJsFolder(IController controller);
+  
+  public IFile getJsFile(IController controller, ICakeAction action);  
   
 }

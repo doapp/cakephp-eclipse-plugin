@@ -3,20 +3,22 @@ package com.doapps.cakephp.properties;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import com.doapps.cakephp.files.CakeVersion;
 import com.doapps.cakephp.preferences.PreferenceConstants;
 
 public class CakePHPPropertyPage extends PropertyPage {
@@ -24,7 +26,8 @@ public class CakePHPPropertyPage extends PropertyPage {
 
 	private Text cakeAppDir;
 	private Combo cakeVersion;
-
+	private Button useProjectSpecificSettings;
+	
 	/**
 	 * Constructor for SamplePropertyPage.
 	 */
@@ -50,10 +53,42 @@ public class CakePHPPropertyPage extends PropertyPage {
 	private void createView(Composite parent) {
 		Composite composite = createDefaultComposite(parent);
 		
+		//Enable proj specific settings (defaults to false)
+		Boolean initialEnableProjSpecificVal = false;
+		useProjectSpecificSettings = new Button(composite, SWT.CHECK);
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		useProjectSpecificSettings.setLayoutData(gridData);
+//		useProjectSpecificSettings.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		try {
+			String enableProjSpecific = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_ENABLE_PROJECT_SPECIFIC_SETTINGS));
+			if(null != enableProjSpecific) {
+				initialEnableProjSpecificVal = Boolean.parseBoolean(enableProjSpecific);
+				useProjectSpecificSettings.setSelection(initialEnableProjSpecificVal);				
+			}
+			else {
+				useProjectSpecificSettings.setSelection(false);
+			}
+		} catch (CoreException e) {
+			useProjectSpecificSettings.setSelection(false);
+		}	
+				
+		useProjectSpecificSettings.setText("Enable project specific settings"); //$NON-NLS-1$
+		useProjectSpecificSettings.addSelectionListener(new SelectionAdapter() {
+	      public void widgetSelected(SelectionEvent evt) {
+	    	  toggleProjectSpecificFields(useProjectSpecificSettings.getSelection());
+	      }
+	    });	
+	    
+		addSeparator(composite);		
+		
+		//Cake version selector
 		Label cakeVersionLabel = new Label(composite, SWT.NONE);
 		cakeVersionLabel.setText("CakePHP version:");
-		cakeVersion = new Combo (composite, SWT.DROP_DOWN);
-		cakeVersion.setItems(PreferenceConstants.cakeVersionsList);
+		cakeVersion = new Combo (composite, SWT.DROP_DOWN);		
+		cakeVersion.setItems(CakeVersion.getVersions().toArray(new String[0]));
+		
 		try {
 			String selectedItem = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_CAKE_VER));
 			cakeVersion.setText((null != selectedItem) ? selectedItem : PreferenceConstants.DEFAULT_CAKE_VER);
@@ -62,8 +97,9 @@ public class CakePHPPropertyPage extends PropertyPage {
 		}		
 		
 		
+		//APP_DIR directory selector
 		Label appNameLabel = new Label(composite, SWT.NONE);
-		appNameLabel.setText("App folder (APP_DIR):");		
+		appNameLabel.setText("App folder (rel to project):");		
 		cakeAppDir = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		cakeAppDir.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		GridData gd = new GridData();
@@ -71,23 +107,26 @@ public class CakePHPPropertyPage extends PropertyPage {
 		cakeAppDir.setLayoutData(gd);
 
 		try {
-			String appFolderName =	((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
-			cakeAppDir.setText((appFolderName != null) ? appFolderName : PreferenceConstants.DEFAULT_APP_DIR);
+			String appFolder =	((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
+			cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
 		} catch (CoreException e) {
-			cakeAppDir.setText(PreferenceConstants.DEFAULT_APP_DIR);
+			cakeAppDir.setText(CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
 		}
 				
-	    Button browseFS = new Button(composite, SWT.PUSH);
-	    browseFS.setText("Browse"); //$NON-NLS-1$
-	    browseFS.addSelectionListener(new SelectionAdapter() {
-	      public void widgetSelected(SelectionEvent evt) {
-	        DirectoryDialog dlg = new DirectoryDialog(cakeVersion.getShell());
-	        dlg.setFilterPath(cakeAppDir.getText());
-	        dlg.setMessage("Select CakePHP app folder (APP_DIR)");
-	        String selectedDir = dlg.open();
-	        cakeAppDir.setText(selectedDir != null ? selectedDir : PreferenceConstants.DEFAULT_APP_DIR);
-	      }
-	    });	   
+//	    Button browseFS = new Button(composite, SWT.PUSH);
+//	    browseFS.setText("Browse"); //$NON-NLS-1$
+//	    browseFS.addSelectionListener(new SelectionAdapter() {
+//	      public void widgetSelected(SelectionEvent evt) {
+//	        DirectoryDialog dlg = new DirectoryDialog(cakeVersion.getShell());
+//	        dlg.setFilterPath(cakeAppDir.getText());
+//	        dlg.setMessage("Select CakePHP app folder (APP_DIR)");
+//	        String selectedDir = dlg.open();
+//	        cakeAppDir.setText(selectedDir != null ? selectedDir : CakeVersion.getVersion(cakeVersion.getText()).getAppDir().toOSString());
+//	      }
+//	    });	   
+	    
+	    
+	    toggleProjectSpecificFields(initialEnableProjSpecificVal);
 	}
 	
 //	private void addFirstSection(Composite parent) {
@@ -127,11 +166,21 @@ public class CakePHPPropertyPage extends PropertyPage {
 
 		return composite;
 	}
+	
+	private void toggleProjectSpecificFields(Boolean projectSpecificEnabled) {
+		cakeAppDir.setEnabled(projectSpecificEnabled);
+		cakeVersion.setEnabled(projectSpecificEnabled);
+	}
 
+	/**
+	 * Restore defaults button pressed
+	 */
 	protected void performDefaults() {
 		super.performDefaults();
-		cakeAppDir.setText(PreferenceConstants.DEFAULT_APP_DIR);
+		cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getDefaultAppDirName());
 		cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
+		useProjectSpecificSettings.setSelection(false);
+		toggleProjectSpecificFields(false);
 	}
 	
 	public boolean performOk() {
@@ -142,7 +191,12 @@ public class CakePHPPropertyPage extends PropertyPage {
 			
 			((IResource) getElement()).setPersistentProperty(
 					new QualifiedName("", PreferenceConstants.P_CAKE_VER),
-					cakeVersion.getText());			
+					cakeVersion.getText());	
+			
+			((IResource) getElement()).setPersistentProperty(
+					new QualifiedName("", PreferenceConstants.P_ENABLE_PROJECT_SPECIFIC_SETTINGS),
+					new Boolean(useProjectSpecificSettings.getSelection()).toString());	
+						
 		} catch (CoreException e) {
 			return false;
 		}
