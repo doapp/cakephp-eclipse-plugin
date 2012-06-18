@@ -5,14 +5,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.xicabin.cakephp.util.Inflector;
 
 public abstract class CakeVersion
 {
 	private String name;
-	private IProject project;
 	
 	private static final Map<String, CakeVersion> versions = new HashMap<String, CakeVersion>();
 
