@@ -215,6 +215,34 @@ public abstract class CakeVersion
 		return Inflector.pluralize(model.getName());
 	}
 	
+  public String getControllerNameForView(IView view)
+  {
+    // TODO: is this different for versions?  I don't think so
+    // 1.x: views/tests/index.ctp -> tests
+    // 2.x: View/Tests/index.ctp -> Tests
+    IPath path = view.getFile().getProjectRelativePath();
+    int numSegments = path.segmentCount();
+    if (numSegments > 2)
+    {
+      return path.segment(numSegments - 2);
+    }
+    return null;
+  }
+  
+  public String getControllerNameForJSFile(IJSFile file)
+  {
+    // TODO: is this different for versions?  I don't think so
+    // 1.x: views/tests/index.ctp -> tests
+    // 2.x: View/Tests/index.ctp -> Tests
+    IPath path = file.getFile().getProjectRelativePath();
+    int numSegments = path.segmentCount();
+    if (numSegments > 2)
+    {
+      return path.segment(numSegments - 2);
+    }
+    return null;
+  }
+    
   public String getViewNameForAction(String action)
   {
     // TODO: is this different for versions?  I don't think so
@@ -229,6 +257,21 @@ public abstract class CakeVersion
     // 1.x: tests_controller.php:index() -> views/tests/index.ctp
     // 2.x: TestsController.php:index() -> View/Tests/index.ctp
     return controller.getName();
+  }
+  
+  public String getJSfolderNameForController(IController controller)
+  {
+    return controller.getName();
+  }
+  
+  public String getJSFileNameForView(IView view)
+  {
+    return view.getName();
+  }
+  
+  public String getViewFileNameForJSFile(IJSFile jsFile)
+  {
+    return jsFile.getName();
   }
   
 	/**
@@ -263,8 +306,8 @@ public abstract class CakeVersion
 		int numSegments = thePath.segmentCount();
 		String versionDirName = getViewDirName();
 		
-		//-2 cuz its 0 indexed
-		return (thePath.segment(numSegments - 2).equals(versionDirName));
+		//-3 cuz its 0 indexed
+		return (thePath.segment(numSegments - 3).equals(versionDirName));
 	}
 	
 	public boolean isElement(IFile file) {
@@ -283,8 +326,8 @@ public abstract class CakeVersion
 		int numSegments = thePath.segmentCount();
 		String versionDirName = getJsDirName();
 		
-		//-2 cuz its 0 indexed
-		return (thePath.segment(numSegments - 2).equals(versionDirName));
+		//-3 cuz its 0 indexed
+		return (thePath.segment(numSegments - 3).equals(versionDirName));
 	}
 	
 	public boolean isController(IFile file) {
@@ -313,18 +356,22 @@ public abstract class CakeVersion
       }
       case ELEMENT:
       case VIEW:
-      case JSFILE:
       {
         // Current format
         // 2.X: <root >/View/Models/index.ctp
         // 2.X: <root >/View/Elements/nav.ctp
-        // 2.X: <root >/webroot/js/Model/index.js
         // 1.X: <root >/View/models/index.ctp
         // 1.X: <root >/View/elements/nav.ctp
-        // 1.X: <root >/webroot/js/models/index.js
         segmentCountToRemove = 3;
         break;
-        
+      }
+      case JSFILE:
+      {
+        // Current format
+        // 2.X: <root >/webroot/js/Model/index.js
+        // 1.X: <root >/webroot/js/models/index.js
+        segmentCountToRemove = 4;
+        break;
       }
     }
     IPath path = file.getFile().getProjectRelativePath();
@@ -338,21 +385,68 @@ public abstract class CakeVersion
     return null;
   }
   
-  public IPath getControllerPath(IPath rootFolder, IModel model)
+  public IPath getControllerPath(IModel model)
   {
     String controllerFileName = constructControllerName(getControllerNameForModel(model));
-    return rootFolder.append(getControllerDirName()).append(controllerFileName);
+    return getRootFolder(model).append(getControllerDirName()).append(controllerFileName);
   }
 
-  public IPath getModelPath(IPath rootFolder, IController controller)
+  public IPath getControllerPath(IView view)
+  {
+    String controllerFileName = constructControllerName(getControllerNameForView(view));
+    return getRootFolder(view).append(getControllerDirName()).append(controllerFileName);
+  }
+  
+  public IPath getControllerPath(IJSFile file)
+  {
+    String controllerFileName = constructControllerName(getControllerNameForJSFile(file));
+    return getRootFolder(file).append(getControllerDirName()).append(controllerFileName);
+  }
+
+  public IPath getModelPath(IController controller)
   {
     String modelFileName = constructModelName(getModelNameForController(controller));
-    return rootFolder.append(getModelDirName()).append(modelFileName);
+    return getRootFolder(controller).append(getModelDirName()).append(modelFileName);
   }
 
-  public IPath getViewPath(IPath rootFolder, IController controller, String action)
+  public IPath getViewPath(IController controller, String action)
   {
     String viewPath = constructViewName(getViewFolderNameForController(controller), action);
-    return rootFolder.append(getViewDirName()).append(viewPath);
+    return getRootFolder(controller).append(getViewDirName()).append(viewPath);
   }
+
+  public IPath getViewPath(IJSFile file)
+  {
+    IController controller = file.getProject().getControllerForJSFile(file);
+    if (controller == null)
+    {
+      return null;
+    }
+    String folderName = getViewFolderNameForController(controller);
+    String fileName = getViewFileNameForJSFile(file);
+    return getRootFolder(file).append(getViewDirName()).append(folderName).append(fileName).addFileExtension(getViewExtension());
+  }
+
+  public IPath getJSFilePath(IView view)
+  {
+    IController controller = view.getProject().getControllerForView(view);
+    if (controller == null)
+    {
+      return null;
+    }
+    String jsFolderName = getJSfolderNameForController(controller);
+    String jsFileName = getJSFileNameForView(view);
+    return getRootFolder(view).append(getWebrootDirName()).append(getJsDirName()).append(jsFolderName).append(jsFileName).addFileExtension(getJSFileExtension());
+  }
+  
+  public String getViewExtension()
+  {
+    return "ctp";
+  }
+  
+  public String getJSFileExtension()
+  {
+    return "js";
+  }
+
 }

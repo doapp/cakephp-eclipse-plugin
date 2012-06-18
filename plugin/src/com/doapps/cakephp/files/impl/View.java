@@ -25,5 +25,4 @@ public class View extends CakePHPFile implements IView
   {
     return CakePHPFileType.VIEW;
   }
-
 }

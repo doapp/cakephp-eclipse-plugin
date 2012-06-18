@@ -55,6 +55,7 @@ public class CakePHPProject implements ICakePHPProject
    * 
    * @return
    */
+  @Override
   public CakeVersion getCakePHPVersion()
   {
     return this.cakeVersion;
@@ -141,28 +142,29 @@ public class CakePHPProject implements ICakePHPProject
     ICakePHPFile currentFile = getCakePHPFile(file);
     if (currentFile != null)
     {
+      CakeVersion version = getCakePHPVersion();
       switch (currentFile.getCakePHPFileType())
       {
         case MODEL:
         {
-          return getController(currentFile);
+          return new Controller(this, getFile(version.getControllerPath((IModel) currentFile)));
         }
         case CONTROLLER:
         {
           String selectedText = FileUtils.getSelectedText();
           if ((selectedText != null) && (selectedText.length() > 0))
           {
-            return getView(currentFile, selectedText);
+            return new View(this, getFile(version.getViewPath((IController) currentFile, selectedText)));
           }
-          return getModel(currentFile);
+          return new Model(this, getFile(version.getModelPath((IController) currentFile)));
         }
         case VIEW:
         {
-          return getJSFile((IView) currentFile);
+          return new JSFile(this, getFile(version.getJSFilePath((IView) currentFile)));
         }
         case JSFILE:
         {
-          break;
+          return new View(this, getFile(version.getViewPath((IJSFile) currentFile)));
         }
         case ELEMENT:
         {
@@ -225,163 +227,18 @@ public class CakePHPProject implements ICakePHPProject
     }
   }
 
-//  private IController getController(IPath rootFolder, String name)
-//  {
-//    // IController controller = new Controller(this,
-//    // getCakePHPVersion().getController(name));
-//    CakeVersion version = getCakePHPVersion();
-//    String controllerFileName = version.constructControllerName(name);
-//    IController controller = new Controller(this, getFile(rootFolder.append(version.getControllerDirName()).append(controllerFileName)));
-//    return controller;
-//  }
-
-//  private IModel getModel(IPath rootFolder, String name)
-//  {
-//    // IModel model = new Model(this, getCakePHPVersion().getModel(name));
-//    CakeVersion version = getCakePHPVersion();
-//    String modelFileName = version.constructModelName(name);
-//    IModel model = new Model(this, getFile(rootFolder.append(version.getModelDirName()).append(modelFileName)));
-//    return model;
-//  }
-//
-//  private IView getView(IPath rootFolder, String controllerName, String action)
-//  {
-//    // IModel model = new Model(this, getCakePHPVersion().getModel(name));
-//    CakeVersion version = getCakePHPVersion();
-//    String viewPath = version.constructViewName(controllerName, action);
-//    IView view = new View(this, getFile(rootFolder.append(version.getViewDirName()).append(viewPath)));
-//    return view;
-//  }
-
   @Override
-  public IController getController(ICakePHPFile file)
+  public IController getControllerForView(IView file)
   {
-    CakeVersion version = getCakePHPVersion();
-    IPath rootFolder = version.getRootFolder(file);
-
-    switch (file.getCakePHPFileType())
-    {
-      case MODEL:
-      {
-        return new Controller(this, getFile(version.getControllerPath(rootFolder, (IModel) file)));
-        //return getController(rootFolder, version.getControllerNameForModel((IModel) file));
-      }
-      case CONTROLLER:
-      {
-        // just return the same file
-        return (IController) file;
-      }
-      case VIEW:
-      {
-        // return getModel(getModelNameForController((IController) file));
-      }
-      case JSFILE:
-      {
-        break;
-      }
-      case ELEMENT:
-      {
-        break;
-      }
-    }
-    return null;
+    return new Controller(this, getFile(getCakePHPVersion().getControllerPath(file)));
   }
   
   @Override
-  public IJSFile getJSFile(IView file)
+  public IController getControllerForJSFile(IJSFile file)
   {
-    CakeVersion version = getCakePHPVersion();
-    IPath rootFolder = version.getRootFolder(file);
-
-    switch (file.getCakePHPFileType())
-    {
-      case MODEL:
-      {
-        break;
-      }
-      case CONTROLLER:
-      {
-        break;
-      }
-      case VIEW:
-      {
-        //return getModel(getModelNameForController((IController) file));
-      }
-      case JSFILE:
-      {
-        // just return the same file
-        return (IJSFile) file;
-      }
-      case ELEMENT:
-      {
-        break;
-      }
-    }
-    return null;
+    return new Controller(this, getFile(getCakePHPVersion().getControllerPath(file)));
   }
-
   
-
-  @Override
-  public IModel getModel(ICakePHPFile file)
-  {
-    CakeVersion version = getCakePHPVersion();
-    IPath rootFolder = version.getRootFolder(file);
-
-    switch (file.getCakePHPFileType())
-    {
-      case MODEL:
-      {
-        // just return same file
-        return (IModel) file;
-      }
-      case CONTROLLER:
-      {
-        return new Model(this, getFile(version.getModelPath(rootFolder, (IController) file)));
-        //return getModel(rootFolder, getCakePHPVersion().getModelNameForController((IController) file));
-      }
-      case VIEW:
-      {
-        break;
-      }
-      case JSFILE:
-      {
-        break;
-      }
-      case ELEMENT:
-      {
-        break;
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public IView getView(ICakePHPFile file, String selectedText)
-  {
-    CakeVersion version = getCakePHPVersion();
-    IPath rootFolder = version.getRootFolder(file);
-
-    switch (file.getCakePHPFileType())
-    {
-      case CONTROLLER:
-      {
-        return new View(this, getFile(version.getViewPath(rootFolder, (IController) file, selectedText)));
-        //return getView(rootFolder, version.getViewFolderNameForController((IController) file), version.getViewNameForAction(selectedText));
-      }
-      case VIEW:
-      {
-        // just return same file
-        return (IView) file;
-      }
-      case JSFILE:
-      {
-        break;
-      }
-    }
-    return null;
-  }
-
   public IFile getAppDir()
   {
     String appDir = getAppDirName();
@@ -475,5 +332,4 @@ public class CakePHPProject implements ICakePHPProject
     // return getCakePHPVersion().getModelDir().getFullPath();
     return null;
   }
-
 }

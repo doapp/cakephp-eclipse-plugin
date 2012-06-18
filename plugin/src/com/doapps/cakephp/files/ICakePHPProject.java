@@ -20,15 +20,11 @@ public interface ICakePHPProject
   
   public IPath getModelFolder();
   
-  public IModel getModel(ICakePHPFile file);
-    
   public IPath getViewFolder();
   
   public IPath getViewFolder(IController controller);
   
   public IPath getElementsFolder();
-  
-  public IController getController(ICakePHPFile file);  
   
   public IPath getWebrootFolder();
   
@@ -36,8 +32,10 @@ public interface ICakePHPProject
   
   public IPath getJSFolder(IController controller);
   
-  public IView getView(ICakePHPFile file, String selectedText);
+  public CakeVersion getCakePHPVersion();
 
-  public IJSFile getJSFile(IView view);  
+  public IController getControllerForView(IView file);
+  
+  public IController getControllerForJSFile(IJSFile file);
   
 }
