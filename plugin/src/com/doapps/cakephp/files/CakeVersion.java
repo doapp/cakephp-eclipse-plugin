@@ -36,20 +36,6 @@ public abstract class CakeVersion
 	}
 
 	// use this to get the version from the selected project setting
-	public static CakeVersion getVersion(String name, IProject project)
-	{
-		CakeVersion version = versions.get(name);
-		
-		if (version == null)
-		{
-			throw new RuntimeException("Invalid cake version: " + name);
-		}
-		
-		version.setProject(project);
-		return version;
-	}
-	
-	//TODO: figure out how to pass in IProject handle in Activator. This is only needed cuz window pref and proj prop cant pass in project handle
 	public static CakeVersion getVersion(String name)
 	{
 		CakeVersion version = versions.get(name);
@@ -58,16 +44,29 @@ public abstract class CakeVersion
 		{
 			throw new RuntimeException("Invalid cake version: " + name);
 		}
-
+		
 		return version;
 	}
 	
-	public void setProject(IProject project) {
-		this.project = project;
-	}
-	public IProject getProject() {
-		return this.project;
-	}
+	//TODO: figure out how to pass in IProject handle in Activator. This is only needed cuz window pref and proj prop cant pass in project handle
+//	public static CakeVersion getVersion(String name)
+//	{
+//		CakeVersion version = versions.get(name);
+//		
+//		if (version == null)
+//		{
+//			throw new RuntimeException("Invalid cake version: " + name);
+//		}
+//
+//		return version;
+//	}
+	
+//	public void setProject(IProject project) {
+//		this.project = project;
+//	}
+//	public IProject getProject() {
+//		return this.project;
+//	}
 	
 //	public IPath getCurrentProjectDir()
 //	{
@@ -80,51 +79,51 @@ public abstract class CakeVersion
 		return this.name;
 	}
 
-	public IFile getAppDir() {
-		String appDir = getAppDirName();
-		if( null != appDir ) {
-			return getProject().getFile(appDir);
-		}
-		//If here, just use the default
-		return getDefaultAppDir();
-	}
+//	public IFile getAppDir() {
+//		String appDir = getAppDirName();
+//		if( null != appDir ) {
+//			return getProject().getFile(appDir);
+//		}
+//		//If here, just use the default
+//		return getDefaultAppDir();
+//	}
 	
-	public String getAppDirName() {
-		String appDir = null;
+//	public String getAppDirName() {
+//		String appDir = null;
+//
+//		try {
+//			//First check if they have a proj specific app dir
+//			if(FileUtils.isProjectSpecificSettingsEnabled()) {
+//				appDir = FileUtils.getProjectProperty(PreferenceConstants.P_APP_DIR);
+//				if(null != appDir) return appDir;
+//			}
+//		} catch (CoreException e) {
+//			//Property not found, so not using project specific settings
+//		}
+//
+//		//If we are here, try to get the editor wide preferences app dir
+//		appDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_APP_DIR);
+//		//Pref app dir is relative to project	
+//		if(null != appDir) return appDir;
+//		
+//		return getDefaultAppDirName();
+//	}
 
-		try {
-			//First check if they have a proj specific app dir
-			if(FileUtils.isProjectSpecificSettingsEnabled()) {
-				appDir = FileUtils.getProjectProperty(PreferenceConstants.P_APP_DIR);
-				if(null != appDir) return appDir;
-			}
-		} catch (CoreException e) {
-			//Property not found, so not using project specific settings
-		}
-
-		//If we are here, try to get the editor wide preferences app dir
-		appDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_APP_DIR);
-		//Pref app dir is relative to project	
-		if(null != appDir) return appDir;
-		
-		return getDefaultAppDirName();
-	}
-
-	public IFile getDefaultAppDir() {
-		return getProject().getFile(getDefaultAppDirName());
-	}
+//	public IFile getDefaultAppDir() {
+//		return getProject().getFile(getDefaultAppDirName());
+//	}
 	
 	public abstract String getDefaultAppDirName();
 
-	public IFile getModelDir() {
-		return getProject().getFile(getAppDirName() + File.separator + getModelDirName());
-	}
+//	public IFile getModelDir() {
+//		return getProject().getFile(getAppDirName() + File.separator + getModelDirName());
+//	}
 
 	public abstract String getModelDirName();
 
-	public IFile getModel(String name){	
-		return getProject().getFile(getModelDir().getProjectRelativePath().append(constructModelName(name)));
-	}
+//	public IFile getModel(String name){	
+//		return getProject().getFile(getModelDir().getProjectRelativePath().append(constructModelName(name)));
+//	}
 	
 	/**
 	 *  
@@ -133,53 +132,53 @@ public abstract class CakeVersion
 	 */
 	public abstract String constructModelName(String name);
 	
-	public IFile getViewDir() {
-		return getProject().getFile(getAppDirName() + File.separator + getViewDirName());
-	}
+//	public IFile getViewDir() {
+//		return getProject().getFile(getAppDirName() + File.separator + getViewDirName());
+//	}
 
 	public abstract String getViewDirName();
 		
-	public IFile getElementDir() {
-		return getProject().getFile(getElementDirName());
-	}
+//	public IFile getElementDir() {
+//		return getProject().getFile(getElementDirName());
+//	}
 
 	public abstract String getElementDirName();
 	
-	public IFile getWebrootDir() {
-		return getProject().getFile(getWebrootDirName());
-	}
+//	public IFile getWebrootDir() {
+//		return getProject().getFile(getWebrootDirName());
+//	}
 	
 	public String getWebrootDirName() {
 		return "webroot";
 	}
 	
-	public IFile getJsDir() {
-		return getProject().getFile(getJsDirName());
-	}
+//	public IFile getJsDir() {
+//		return getProject().getFile(getJsDirName());
+//	}
 	
 	public String getJsDirName() {
 		return "js";
 	}
 	
-	public IFile getCssDir() {
-		return getProject().getFile(getCssDirName());
-	}
+//	public IFile getCssDir() {
+//		return getProject().getFile(getCssDirName());
+//	}
 	
 	public String getCssDirName() {
 		return "css";
 	}
 	
-	public IFile getControllerDir() {
-		return getProject().getFile(getAppDirName() + File.separator + getControllerDirName());
-	}
+//	public IFile getControllerDir() {
+//		return getProject().getFile(getAppDirName() + File.separator + getControllerDirName());
+//	}
 	
 	public abstract String getControllerDirName();
 	
 	public abstract String getControllerFileNameSuffix();
 	
-	public IFile getController(String name){		
-		return getProject().getFile(getControllerDir().getProjectRelativePath().append(constructControllerName(name)));
-	}
+//	public IFile getController(String name){		
+//		return getProject().getFile(getControllerDir().getProjectRelativePath().append(constructControllerName(name)));
+//	}
 	
 	/**
 	 * Append version specific suffix to a controller name 
@@ -196,15 +195,15 @@ public abstract class CakeVersion
 	 * Start of getting things by controller
 	 *******/
 	
-	public IFile getViewFolder(IController controller) {
-		//TODO: find out how to search/manipulate paths
-		return getViewDir();
-	}
+//	public IFile getViewFolder(IController controller) {
+//		//TODO: find out how to search/manipulate paths
+//		return getViewDir();
+//	}
 	
-	public IFile getJsFolder(IController controller) {
-	    String jsFolderName = controller.getName();
-	    return getProject().getFile(jsFolderName);
-	}
+//	public IFile getJsFolder(IController controller) {
+//	    String jsFolderName = controller.getName();
+//	    return getProject().getFile(jsFolderName);
+//	}
 	
 	public String getModelNameForController(IController controller) {
 	    // TODO: is this different for versions?  I don't think so
@@ -225,17 +224,17 @@ public abstract class CakeVersion
 	 * Start of getting things by controller and action
 	 */
 	
-	public IFile getViewFile(IController controller, ICakeAction action) {
-	    String actionName = action.getName();
-	    IFile viewFile = getProject().getFile(getViewFolder(controller).toString() + File.separator + actionName);
-	    return viewFile;
-	}
+//	public IFile getViewFile(IController controller, ICakeAction action) {
+//	    String actionName = action.getName();
+//	    IFile viewFile = getProject().getFile(getViewFolder(controller).toString() + File.separator + actionName);
+//	    return viewFile;
+//	}
 	
-	public IFile getJsFile(IController controller, ICakeAction action) {
-	    String jsName = action.getName();
-	    IFile jsFile = getProject().getFile(getJsFolder(controller).toString() + File.separator + jsName);
-	    return jsFile;
-	}
+//	public IFile getJsFile(IController controller, ICakeAction action) {
+//	    String jsName = action.getName();
+//	    IFile jsFile = getProject().getFile(getJsFolder(controller).toString() + File.separator + jsName);
+//	    return jsFile;
+//	}
 	
 	public boolean isModel(IFile file) {
 		//For a model, 2nd to last segment should be <modelDirName>/

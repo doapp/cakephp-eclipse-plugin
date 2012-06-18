@@ -6,12 +6,9 @@ package com.doapps.cakephp.util;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -98,11 +95,11 @@ public class FileUtils {
         return projectPath;
 	}
 	
-	static public Boolean isProjectSpecificSettingsEnabled() {
+	static public Boolean isProjectSpecificSettingsEnabled(IProject project) {
 		Boolean projectSpecificSettingsEnabled = false;
 		try {
 			//First check if they have a proj specific app dir
-			String enableProjSpecific = FileUtils.getProjectProperty(PreferenceConstants.P_ENABLE_PROJECT_SPECIFIC_SETTINGS);
+			String enableProjSpecific = FileUtils.getProjectProperty(project, PreferenceConstants.P_ENABLE_PROJECT_SPECIFIC_SETTINGS);
 			if(null != enableProjSpecific) {
 				projectSpecificSettingsEnabled = Boolean.parseBoolean(enableProjSpecific);			
 			}		
@@ -118,11 +115,11 @@ public class FileUtils {
 	 * @param key they key must be the same in the properties store and the preference store
 	 * @return null|String
 	 */
-	static public String getProjectPropertyOrWorkspacePref(String key) {
-		if(!isProjectSpecificSettingsEnabled()) return Activator.getDefault().getPreferenceStore().getString(key);
+	static public String getProjectPropertyOrWorkspacePref(IProject project, String key) {
+		if(!isProjectSpecificSettingsEnabled(project)) return Activator.getDefault().getPreferenceStore().getString(key);
 		else {
 			try {
-				return getProjectProperty(key);
+				return getProjectProperty(project, key);
 			} catch (CoreException e) {
 				return null;
 			}
@@ -136,18 +133,20 @@ public class FileUtils {
 	 * @return null|String value
 	 * @throws CoreException
 	 */
-	static public String getProjectProperty(String key) throws CoreException {
-		String value = null;
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-	    if (window != null)
-	    {
-	        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
-	        Object firstElement = selection.getFirstElement();
-	        if (firstElement instanceof IResource)
-	        {
-	        	value = ((IResource) firstElement).getPersistentProperty(new QualifiedName("", key));
-	        }
-	    }
-	    return value;
+	static public String getProjectProperty(IProject project, String key) throws CoreException {
+	  // shouldn't this property have a name?
+	  return project.getPersistentProperty(new QualifiedName("", key));
+//		String value = null;
+//		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//	    if (window != null)
+//	    {
+//	        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
+//	        Object firstElement = selection.getFirstElement();
+//	        if (firstElement instanceof IResource)
+//	        {
+//	        	value = ((IResource) firstElement).getPersistentProperty(new QualifiedName("", key));
+//	        }
+//	    }
+//	    return value;
 	}
 }
