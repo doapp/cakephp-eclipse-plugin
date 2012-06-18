@@ -12,7 +12,7 @@ public abstract class CakePHPFile implements ICakePHPFile
 {
   private ICakePHPProject project;
   private IFile file;
-  private static final Pattern NAME_PATTERN = Pattern.compile("\\(.*\\)\\..*");
+  private static final Pattern NAME_PATTERN = Pattern.compile("(.*)\\..*");
   
   
   public CakePHPFile(ICakePHPProject project, IFile file)
@@ -42,12 +42,15 @@ public abstract class CakePHPFile implements ICakePHPFile
   @Override
   public String getName()
   {
+//    String fileName = this.file.getName();
     Matcher matcher = getNamePattern().matcher(this.file.getName());
+    //Matcher matcher = Pattern.compile("TestsController\\.php").matcher("TestsController.php");
     
     try
     {
-      if (matcher.find() && (matcher.groupCount() > 1))
+      if (matcher.find() && (matcher.groupCount() > 0))
       {
+        String t= matcher.group(1);
         return matcher.group(1);
       }
     }

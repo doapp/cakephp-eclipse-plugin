@@ -10,6 +10,8 @@ import com.doapps.cakephp.files.IController;
 
 public class Controller extends CakePHPFile implements IController
 {
+  private static final Pattern NAME_PATTERN = Pattern.compile("(.*)Controller\\..*");
+  
   public Controller(ICakePHPProject project, IFile file)
   {
     super(project, file);
@@ -32,7 +34,7 @@ public class Controller extends CakePHPFile implements IController
   public Pattern getNamePattern()
   {
     // TODO: get from version class
-    return Pattern.compile("(.*)Controller\\..*");
+    return NAME_PATTERN;
     //return Pattern.compile("\\(.*\\)_controller\\..*");
   }
 }
