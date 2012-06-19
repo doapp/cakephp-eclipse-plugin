@@ -129,7 +129,7 @@
          point="org.eclipse.ui.propertyPages">
       <page
             class="com.doapps.cakephp.properties.CakePHPPropertyPage"
-            id="com.doapps.cakephp.properties.samplePropertyPage"
+            id="com.doapps.cakephp.properties.CakePHPPropertyPage"
             name="CakePHP project"
             objectClass="org.eclipse.core.resources.IProject">
       </page>
