@@ -133,14 +133,20 @@ public class CakePHPProject implements ICakePHPProject
   }
   */
   @Override
-  public ICakePHPFile getFileToOpen()
+  public ICakePHPFile getCurrentlySelectedFile()
   {
     IFile file = FileUtils.getSelectedFile();
     if (file == null)
     {
       return null;
     }
-    ICakePHPFile currentFile = getCakePHPFile(file);
+    return getCakePHPFile(file);
+  }
+  
+  @Override
+  public ICakePHPFile getFileToOpen()
+  {
+    ICakePHPFile currentFile = getCurrentlySelectedFile();
     if (currentFile != null)
     {
       CakeVersion version = getCakePHPVersion();
@@ -175,11 +181,95 @@ public class CakePHPProject implements ICakePHPProject
     }
     return null;
   }
-
+  
+  private ICakePHPFile getModelFileToOpen()
+  {
+    ICakePHPFile currentFile = getCurrentlySelectedFile();
+    if (currentFile != null)
+    {
+      CakeVersion version = getCakePHPVersion();
+      switch (currentFile.getCakePHPFileType())
+      {
+        case MODEL:
+        {
+          return (IModel) currentFile;
+        }
+        case CONTROLLER:
+        {
+          return new Model(this, getFile(version.getModelPath((IController) currentFile)));
+        }
+        case VIEW:
+        {
+          return new Model(this, getFile(version.getModelPath(getControllerForView((IView) currentFile))));
+        }
+        case JSFILE:
+        {
+          return new Model(this, getFile(version.getModelPath(getControllerForJSFile((IJSFile) currentFile))));       }
+        case ELEMENT:
+        {
+          // no model associated with elements
+          // TODO: remember last model visisted?
+        }
+      }
+    }
+    return null;
+  }
+  
+  private ICakePHPFile getControllerFileToOpen()
+  {
+    ICakePHPFile currentFile = getCurrentlySelectedFile();
+    if (currentFile != null)
+    {
+      CakeVersion version = getCakePHPVersion();
+      switch (currentFile.getCakePHPFileType())
+      {
+        case MODEL:
+        {
+          return new Controller(this, getFile(version.getControllerPath((IModel) currentFile)));
+        }
+        case CONTROLLER:
+        {
+          return (IController) currentFile;
+        }
+        case VIEW:
+        {
+          return getControllerForView((IView) currentFile);
+        }
+        case JSFILE:
+        {
+          return getControllerForJSFile((IJSFile) currentFile);
+        }
+        case ELEMENT:
+        {
+          // no model associated with elements
+          // TODO: remember last controller visited?
+        }
+      }
+    }
+    return null;
+  }
+  
   @Override
   public boolean openNextFile()
   {
-    ICakePHPFile cakePHPFile = getFileToOpen();
+    return openFile(getFileToOpen());
+  }
+
+  
+  @Override
+  public boolean openModelFile()
+  {
+    return openFile(getModelFileToOpen());
+  }
+  
+  @Override 
+  public boolean openControllerFile()
+  {
+    return openFile(getControllerFileToOpen());
+  }
+  
+  private boolean openFile(ICakePHPFile cakePHPFile)
+  {
     if (cakePHPFile == null)
     {
       return false;

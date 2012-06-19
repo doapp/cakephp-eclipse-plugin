@@ -37,5 +37,11 @@ public interface ICakePHPProject
   public IController getControllerForView(IView file);
   
   public IController getControllerForJSFile(IJSFile file);
+
+  public boolean openModelFile();
+
+  public boolean openControllerFile();
   
+  public ICakePHPFile getCurrentlySelectedFile();
+
 }

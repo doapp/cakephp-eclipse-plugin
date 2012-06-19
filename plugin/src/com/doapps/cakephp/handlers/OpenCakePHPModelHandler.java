@@ -22,7 +22,7 @@ import com.doapps.cakephp.util.FileUtils;
  * @author jeremy
  * 
  */
-public class OpenCakePHPFileHandler extends AbstractHandler
+public class OpenCakePHPModelHandler extends AbstractHandler
 { 
   private ICakePHPProject getCakePHPProject()
   {
@@ -43,7 +43,7 @@ public class OpenCakePHPFileHandler extends AbstractHandler
     {
       return null;
     }
-    project.openNextFile();
+    project.openModelFile();
     
     // TODO: what should I return here?
     return null;
