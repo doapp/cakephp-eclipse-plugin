@@ -1,5 +1,6 @@
 package com.doapps.cakephp.preferences;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -55,6 +56,9 @@ public class CakePHPPreferencePage
 
 		addField(new StringFieldEditor(PreferenceConstants.P_APP_DIR,
 				"&App folder (relative to project):", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(PreferenceConstants.P_CREATE_FILES_AUTOMATICALLY,
+        "&Automatically Create Files (if they don't exist):", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)

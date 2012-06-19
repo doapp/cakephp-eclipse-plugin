@@ -8,8 +8,10 @@ import com.doapps.cakephp.Activator;
 public class PreferenceConstants {
 
 	public static final String P_CAKE_VER = Activator.PLUGIN_ID + ".cakeVer";
-	public static final String P_APP_DIR = Activator.PLUGIN_ID + ".appFolderName";	
+	public static final String P_APP_DIR = Activator.PLUGIN_ID + ".appFolderName";
+	public static final String P_CREATE_FILES_AUTOMATICALLY = Activator.PLUGIN_ID + ".createFiles"; 
 	public static final String P_ENABLE_PROJECT_SPECIFIC_SETTINGS = Activator.PLUGIN_ID + ".enableProjectSpecific";	
 	
 	public static final String DEFAULT_CAKE_VER = "2.X";
+	public static final Boolean DEFAULT_CREATE_FILES_AUTOMATICALLY = true;
 }

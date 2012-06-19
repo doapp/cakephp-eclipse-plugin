@@ -1,10 +1,10 @@
 package com.doapps.cakephp.files.impl;
 
 import java.io.ByteArrayInputStream;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.PlatformUI;
@@ -95,6 +95,7 @@ public class CakePHPProject implements ICakePHPProject
     return null;
   }
 
+  /*
   private boolean hasParentFolderAndNameMatches(IFile file, Pattern filePattern, Pattern folderPattern, int maxParentsToCheck)
   {
     if (file == null)
@@ -130,7 +131,7 @@ public class CakePHPProject implements ICakePHPProject
     }
     return false;
   }
-
+  */
   @Override
   public ICakePHPFile getFileToOpen()
   {
@@ -192,7 +193,7 @@ public class CakePHPProject implements ICakePHPProject
     {
       // TODO: check in preferences to see if automatically create files or
       // prompt or do nothing
-      if (!destinationFile.exists())
+      if (!destinationFile.exists() && Boolean.parseBoolean(FileUtils.getProjectPropertyOrWorkspacePref(getProject(), PreferenceConstants.P_CREATE_FILES_AUTOMATICALLY)))
       {
         // currently there's a bug that the file won't get created the first
         // time after the folder is created.

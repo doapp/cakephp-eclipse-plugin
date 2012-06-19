@@ -19,6 +19,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 import com.doapps.cakephp.files.CakeVersion;
 import com.doapps.cakephp.preferences.PreferenceConstants;
+import com.doapps.cakephp.util.FileUtils;
 
 public class CakePHPPropertyPage extends PropertyPage {
 	private static final int TEXT_FIELD_WIDTH = 50;
@@ -26,6 +27,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 	private Text cakeAppDir;
 	private Combo cakeVersion;
 	private Button useProjectSpecificSettings;
+	private Button createFiles;
 	
 	/**
 	 * Constructor for SamplePropertyPage.
@@ -88,12 +90,15 @@ public class CakePHPPropertyPage extends PropertyPage {
 		cakeVersion = new Combo (composite, SWT.DROP_DOWN);		
 		cakeVersion.setItems(CakeVersion.getVersions().toArray(new String[0]));
 		
-		try {
-			String selectedItem = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_CAKE_VER));
-			cakeVersion.setText((null != selectedItem) ? selectedItem : PreferenceConstants.DEFAULT_CAKE_VER);
-		} catch (CoreException e) {
-			cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
-		}		
+//		try {
+//			String selectedItem = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_CAKE_VER));
+//			cakeVersion.setText((null != selectedItem) ? selectedItem : PreferenceConstants.DEFAULT_CAKE_VER);
+//		} catch (CoreException e) {
+//			cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
+//		}		
+		
+		String selectedItem = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement()).getProject(), PreferenceConstants.P_CAKE_VER);
+		cakeVersion.setText((null != selectedItem) ? selectedItem : PreferenceConstants.DEFAULT_CAKE_VER);
 		
 		
 		//APP_DIR directory selector
@@ -105,12 +110,35 @@ public class CakePHPPropertyPage extends PropertyPage {
 		gd.widthHint = convertWidthInCharsToPixels(TEXT_FIELD_WIDTH);
 		cakeAppDir.setLayoutData(gd);
 
-		try {
-			String appFolder =	((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
-			cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
-		} catch (CoreException e) {
-			cakeAppDir.setText(CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
-		}
+		//String appFolder =	((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
+		String appFolder = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement()).getProject(), PreferenceConstants.P_APP_DIR);
+		cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
+		
+		// create files automatically
+    //Enable proj specific settings (defaults to false)
+    //Boolean initialCreateFilesAutomatically = PreferenceConstants.DEFAULT_CREATE_FILES_AUTOMATICALLY;
+    createFiles = new Button(composite, SWT.CHECK);
+    GridData gridData2 = new GridData();
+    gridData2.horizontalAlignment = GridData.FILL;
+    gridData2.grabExcessHorizontalSpace = true;
+    createFiles.setLayoutData(gridData2);
+//    useProjectSpecificSettings.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//    try {
+//      String createAutoPref = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_CREATE_FILES_AUTOMATICALLY));
+//      if(null != createAutoPref) {
+//        initialCreateFilesAutomatically = Boolean.parseBoolean(createAutoPref);
+//      }
+//    } catch (CoreException e) {
+//    } 
+    String createAutoPref = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement()).getProject(), PreferenceConstants.P_CREATE_FILES_AUTOMATICALLY);
+    createFiles.setSelection(Boolean.parseBoolean(createAutoPref));
+        
+    createFiles.setText("Automatically Create Files (if they don't exist)"); //$NON-NLS-1$
+    createFiles.addSelectionListener(new SelectionAdapter() {
+        public void widgetSelected(SelectionEvent evt) {
+          //toggleProjectSpecificFields(createFiles.getSelection());
+        }
+      }); 
 				
 //	    Button browseFS = new Button(composite, SWT.PUSH);
 //	    browseFS.setText("Browse"); //$NON-NLS-1$
@@ -169,6 +197,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 	private void toggleProjectSpecificFields(Boolean projectSpecificEnabled) {
 		cakeAppDir.setEnabled(projectSpecificEnabled);
 		cakeVersion.setEnabled(projectSpecificEnabled);
+		createFiles.setEnabled(projectSpecificEnabled);
 	}
 
 	/**
@@ -176,7 +205,16 @@ public class CakePHPPropertyPage extends PropertyPage {
 	 */
 	protected void performDefaults() {
 		super.performDefaults();
-		cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getDefaultAppDirName());
+		//cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getDefaultAppDirName());
+		try
+		{
+		  String appDirPref = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
+      cakeAppDir.setText(appDirPref);
+		}
+		catch (Exception e)
+		{
+	    cakeAppDir.setText(CakeVersion.getVersion(PreferenceConstants.DEFAULT_CAKE_VER).getDefaultAppDirName());
+		}
 		cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
 		useProjectSpecificSettings.setSelection(false);
 		toggleProjectSpecificFields(false);
@@ -192,6 +230,10 @@ public class CakePHPPropertyPage extends PropertyPage {
 					new QualifiedName("", PreferenceConstants.P_CAKE_VER),
 					cakeVersion.getText());	
 			
+      ((IResource) getElement()).setPersistentProperty(
+          new QualifiedName("", PreferenceConstants.P_CREATE_FILES_AUTOMATICALLY),
+          new Boolean(createFiles.getSelection()).toString()); 
+      
 			((IResource) getElement()).setPersistentProperty(
 					new QualifiedName("", PreferenceConstants.P_ENABLE_PROJECT_SPECIFIC_SETTINGS),
 					new Boolean(useProjectSpecificSettings.getSelection()).toString());	
