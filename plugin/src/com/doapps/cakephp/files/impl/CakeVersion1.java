@@ -6,6 +6,7 @@ package com.doapps.cakephp.files.impl;
 import java.util.regex.Pattern;
 
 import com.doapps.cakephp.files.CakeVersion;
+import com.doapps.cakephp.files.IElement;
 
 /**
  * @author ryan
@@ -58,6 +59,12 @@ public class CakeVersion1 extends CakeVersion
 	
 	public String getElementDirName() {
 		return "elements";
+	}
+	
+	@Override
+	public String getJSfolderNameForElement(IElement element)
+	{
+	  return "elements";
 	}
 
 	/* (non-Javadoc)

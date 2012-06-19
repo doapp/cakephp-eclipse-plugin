@@ -197,10 +197,17 @@ public abstract class CakeVersion
 		return controller.getName();
 	}
 
+  public abstract String getJSfolderNameForElement(IElement element);
+
 	public String getJSFileNameForView(IView view)
 	{
 		return view.getName();
 	}
+
+  public String getJSFileNameForElement(IElement element)
+  {
+    return element.getName();
+  }
 
 	public String getViewFileNameForJSFile(IJSFile jsFile)
 	{
@@ -247,10 +254,12 @@ public abstract class CakeVersion
 		//For a model, 2nd to last segment should be <elementDirName>/
 		IPath thePath = file.getProjectRelativePath();
 		int numSegments = thePath.segmentCount();
-		String versionDirName = getElementDirName();
-
+		if (numSegments < 3)
+		{
+		  return false;
+		}
 		//-2 cuz its 0 indexed
-		return (thePath.segment(numSegments - 2).equals(versionDirName));
+		return getElementDirName().equals(thePath.segment(numSegments - 2)) && getViewDirName().equals(thePath.segment(numSegments - 3));
 	}
 
 	public boolean isJsFile(IFile file) {
@@ -371,6 +380,13 @@ public abstract class CakeVersion
 		String jsFileName = getJSFileNameForView(view);
 		return getRootFolder(view).append(getWebrootDirName()).append(getJsDirName()).append(jsFolderName).append(jsFileName).addFileExtension(getJSFileExtension());
 	}
+
+  public IPath getJSFilePath(IElement element)
+  {
+    String jsFolderName = getJSfolderNameForElement(element);
+    String jsFileName = getJSFileNameForElement(element);
+    return getRootFolder(element).append(getWebrootDirName()).append(getJsDirName()).append(jsFolderName).append(jsFileName).addFileExtension(getJSFileExtension());
+  }
 
 	public String getViewExtension()
 	{

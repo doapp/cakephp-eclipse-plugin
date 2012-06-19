@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.PlatformUI;
@@ -15,6 +14,7 @@ import com.doapps.cakephp.files.CakeVersion;
 import com.doapps.cakephp.files.ICakePHPFile;
 import com.doapps.cakephp.files.ICakePHPProject;
 import com.doapps.cakephp.files.IController;
+import com.doapps.cakephp.files.IElement;
 import com.doapps.cakephp.files.IJSFile;
 import com.doapps.cakephp.files.IModel;
 import com.doapps.cakephp.files.IView;
@@ -169,7 +169,7 @@ public class CakePHPProject implements ICakePHPProject
         }
         case ELEMENT:
         {
-          break;
+          return new JSFile(this, getFile(version.getJSFilePath((IElement) currentFile)));
         }
       }
     }
