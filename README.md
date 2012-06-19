@@ -76,7 +76,10 @@ This plugin was inspired by the [open cake file plugin](http://opencakefile.sour
 1.  Syncronize update site, and build
 1.  <code>git add update-site/ && git commit -am 'new updatesite build' && git push</code>
 1.  <code>cp -Rf update-site /tmp/</code>
-1.  <code>git checkout gh-pages && git pull && cp -R /tmp/update-site/* update-site/ && git commit -am 'new updatesite build' && git push</code>
+
+```
+git checkout gh-pages && git pull && cp -R /tmp/update-site/* update-site/ && git commit -am 'new updatesite build' && git push
+```
 
 
 
