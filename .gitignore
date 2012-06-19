@@ -6,3 +6,9 @@
 *.ear
 
 !plugin/lib/*
+
+!update-site/*
+!update-site/plugins/*
+!update-site/features/*
+
+
