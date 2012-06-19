@@ -12,6 +12,7 @@ This plugin makes creating and editing CakePHP projects a breeze.  Among other t
 *  open up (M|C) directly from any file
 *  open up view by highlighting action method in controller, and doing ctrl+shift+;
 *  create files that do not exist
+*  CakePHP v1.3+ support (have only tested on 2.1 so far)
 
 ## Installing
 
