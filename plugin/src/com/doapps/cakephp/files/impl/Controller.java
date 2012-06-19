@@ -1,5 +1,9 @@
 package com.doapps.cakephp.files.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
@@ -12,6 +16,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import com.doapps.cakephp.files.CakePHPFileType;
 import com.doapps.cakephp.files.ICakePHPProject;
 import com.doapps.cakephp.files.IController;
+import com.doapps.cakephp.util.FileUtils;
 
 public class Controller extends CakePHPFile implements IController
 {    
@@ -35,26 +40,7 @@ public class Controller extends CakePHPFile implements IController
 
 	@Override
 	public Pattern getNamePattern()
-	{
-//		String name = "testConsole";
-//		MessageConsole myConsole = null;
-//
-//		ConsolePlugin plugin = ConsolePlugin.getDefault();
-//		IConsoleManager conMan = plugin.getConsoleManager();
-//		IConsole[] existing = conMan.getConsoles();
-//		for (int i = 0; i < existing.length; i++){
-//			if (name.equals(existing[i].getName())){
-//				myConsole = (MessageConsole) existing[i];
-//			}
-//		}
-//		if(null == myConsole){
-//			//no console found, so create a new one
-//			myConsole = new MessageConsole(name, null);
-//			conMan.addConsoles(new IConsole[]{myConsole});
-//		}
-//		MessageConsoleStream out = myConsole.newMessageStream();
-//		out.println("Hello from Generic console sample action");
-		   
+	{	
 		return getProject().getCakePHPVersion().getControllerNamePattern();
 	}
 }
