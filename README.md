@@ -78,7 +78,7 @@ This plugin was inspired by the [open cake file plugin](http://opencakefile.sour
 1.  <code>cp -Rf update-site /tmp/</code>
 
 ```
-git checkout gh-pages && git pull && cp -R /tmp/update-site/* update-site/ && git add update-site/ && git commit -am 'new updatesite build' && git push
+git checkout gh-pages && git pull && cp -R /tmp/update-site/* update-site/ && git add update-site/ && git add feature/ && git commit -am 'new updatesite build' && git push
 ```
 
 
