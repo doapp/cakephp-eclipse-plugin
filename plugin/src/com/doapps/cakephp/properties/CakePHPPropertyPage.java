@@ -63,7 +63,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 		useProjectSpecificSettings.setLayoutData(gridData);
 //		useProjectSpecificSettings.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		try {
-			String enableProjSpecific = ((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_ENABLE_PROJECT_SPECIFIC_SETTINGS));
+			String enableProjSpecific = ((IResource) getElement().getAdapter(IResource.class)).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_ENABLE_PROJECT_SPECIFIC_SETTINGS));
 			if(null != enableProjSpecific) {
 				initialEnableProjSpecificVal = Boolean.parseBoolean(enableProjSpecific);
 				useProjectSpecificSettings.setSelection(initialEnableProjSpecificVal);				
@@ -97,7 +97,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 //			cakeVersion.setText(PreferenceConstants.DEFAULT_CAKE_VER);
 //		}		
 		
-		String selectedItem = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement()).getProject(), PreferenceConstants.P_CAKE_VER);
+		String selectedItem = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement().getAdapter(IResource.class)).getProject(), PreferenceConstants.P_CAKE_VER);
 		cakeVersion.setText((null != selectedItem) ? selectedItem : PreferenceConstants.DEFAULT_CAKE_VER);
 		
 		
@@ -111,7 +111,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 		cakeAppDir.setLayoutData(gd);
 
 		//String appFolder =	((IResource) getElement()).getPersistentProperty(new QualifiedName("", PreferenceConstants.P_APP_DIR));
-		String appFolder = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement()).getProject(), PreferenceConstants.P_APP_DIR);
+		String appFolder = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement().getAdapter(IResource.class)).getProject(), PreferenceConstants.P_APP_DIR);
 		cakeAppDir.setText((appFolder != null) ? appFolder : CakeVersion.getVersion(cakeVersion.getText()).getDefaultAppDirName());
 		
 		// create files automatically
@@ -130,7 +130,7 @@ public class CakePHPPropertyPage extends PropertyPage {
 //      }
 //    } catch (CoreException e) {
 //    } 
-    String createAutoPref = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement()).getProject(), PreferenceConstants.P_CREATE_FILES_AUTOMATICALLY);
+    String createAutoPref = FileUtils.getProjectPropertyOrWorkspacePref(((IResource) getElement().getAdapter(IResource.class)).getProject(), PreferenceConstants.P_CREATE_FILES_AUTOMATICALLY);
     createFiles.setSelection(Boolean.parseBoolean(createAutoPref));
         
     createFiles.setText("Automatically Create Files (if they don't exist)"); //$NON-NLS-1$
