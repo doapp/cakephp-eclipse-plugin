@@ -3,19 +3,30 @@
       id="com.doapps.cakephp.feature"
       label="CakePHP Eclipse plugin"
       version="1.0.0.qualifier"
-      provider-name="DoApp">
+      provider-name="DoApp"
+      os="aix,hpux,linux,macosx,qnx,solaris,win32"
+      ws="carbon,cocoa,gtk,motif,photon,win32,wpf"
+      arch="ia64,ia64_32,PA_RISC,ppc,sparc,x86,x86_64">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
-   </description>
+	<description url="https://github.com/doapp/cakephp-eclipse-plugin">
+	An Eclipse plugin for interacting with CakePHP projects
+	
+	This plugin makes creating and editing CakePHP projects a breeze. Among other things, it binds keys to perform frequently used actions.
+	
+	See https://github.com/doapp/cakephp-eclipse-plugin for more information
+	</description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      Copyright 2012, DoApp, Inc. (http://www.doapps.com)
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.opensource.org/licenses/mit-license.php">
+      Licensed under the MIT license
    </license>
+
+   <url>
+      <update label="CakePHP Eclipse Plugin" url="http://doapp.github.com/cakephp-eclipse-plugin/update-site/"/>
+   </url>
 
    <plugin
          id="com.doapps.cakephp"
