@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.doapps.cakephp.feature_1.0.0.201206191415.jar" id="com.doapps.cakephp.feature" version="1.0.0.201206191415">
+      <category name="com.doapps.cakephp"/>
+   </feature>
+   <category-def name="com.doapps.cakephp" label="CakePHP Eclipse plugin">
+      <description>
+         https://github.com/doapp/cakephp-eclipse-plugin
+      </description>
+   </category-def>
+</site>
