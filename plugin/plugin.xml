@@ -2,25 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-  <extension point="org.eclipse.ui.menus">
-      <menuContribution locationURI="popup:org.eclipse.php.ui.explorer">
-      <!-- <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer"> -->
-      
-         <command
-               commandId="com.doapps.cakephp.commands.Switch"
-               label="Switch"
-               style="push">
-         </command>
-      </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="com.doapps.cakephp.commands.Switch"
-            id="com.doapps.cakephp.commands.Switch"
-            name="Switch">
-      </command>
-   </extension>
    <extension point="org.eclipse.ui.commands">
     <category name="CakePHP" id="com.doapps.commands.opencakefile"></category>
     <command name="Open Cake File" categoryId="com.doapps.commands.opencakefile" id="com.doapps.commands.OpenCakeFile"></command>
@@ -52,63 +33,8 @@
       sequence="Ctrl+Shift+C"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
     </key>
-    <key
-      commandId="com.doapps.commands.OpenCakeJSFile"
-      contextId="org.eclipse.ui.contexts.window"
-      sequence="Ctrl+Shift+J"
-      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-    </key>
   </extension>
   
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="Sample Action Set"
-            visible="true"
-            id="com.doapps.cakephp.actionSet">
-         <menu
-               label="Sample &amp;Menu"
-               id="sampleMenu">
-            <separator
-                  name="sampleGroup">
-            </separator>
-         </menu>
-         <action
-               label="&amp;Sample Action"
-               icon="icons/sample.gif"
-               class="com.doapps.cakephp.actions.SampleAction"
-               tooltip="Hello, Eclipse world"
-               menubarPath="sampleMenu/sampleGroup"
-               toolbarPath="sampleGroup"
-               id="com.doapps.cakephp.actions.SampleAction">
-         </action>
-      </actionSet>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            id="com.doapps.cakephp.contribution1"
-            objectClass="org.eclipse.core.resources.IFile">
-         <menu
-               id="com.doapps.cakephp.menu1"
-               label="CakePHP"
-               path="additions">
-            <separator
-                  name="group1">
-            </separator>
-         </menu>
-         <action
-               class="com.doapps.cakephp.popup.actions.OpenModel"
-               enablesFor="1"
-               id="com.doapps.cakephp.newAction"
-               label="Model"
-               menubarPath="com.doapps.cakephp.menu1/group1">
-         </action>
-      </objectContribution>
-   </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page

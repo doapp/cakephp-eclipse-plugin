@@ -1,3 +1,15 @@
+/**
+ *
+ * CakePHP Eclipse Plugin
+ * Copyright 2012, DoApp, Inc. (http://www.doapps.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2012, DoApp, Inc. (http://www.doapps.com)
+ * @link          https://github.com/doapp/cakephp-eclipse-plugin
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 package com.doapps.cakephp.files;
 
 import java.util.HashMap;
@@ -44,41 +56,6 @@ public abstract class CakeVersion
 	{
 		return this.name;
 	}
-
-	//	public IFile getAppDir() {
-	//		String appDir = getAppDirName();
-	//		if( null != appDir ) {
-	//			return getProject().getFile(appDir);
-	//		}
-	//		//If here, just use the default
-	//		return getDefaultAppDir();
-	//	}
-
-	//	public String getAppDirName() {
-	//		String appDir = null;
-	//
-	//		try {
-	//			//First check if they have a proj specific app dir
-	//			if(FileUtils.isProjectSpecificSettingsEnabled()) {
-	//				appDir = FileUtils.getProjectProperty(PreferenceConstants.P_APP_DIR);
-	//				if(null != appDir) return appDir;
-	//			}
-	//		} catch (CoreException e) {
-	//			//Property not found, so not using project specific settings
-	//		}
-	//
-	//		//If we are here, try to get the editor wide preferences app dir
-	//		appDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_APP_DIR);
-	//		//Pref app dir is relative to project	
-	//		if(null != appDir) return appDir;
-	//		
-	//		return getDefaultAppDirName();
-	//	}
-
-	//	public IFile getDefaultAppDir() {
-	//		return getProject().getFile(getDefaultAppDirName());
-	//	}
-
 	public abstract String getDefaultAppDirName();
 
 	public abstract String getModelDirName();
@@ -121,23 +98,6 @@ public abstract class CakeVersion
 	 * @return name of controller (including extension). v2 ex: BlahController.php v1: blah_controller.php
 	 */
 	public abstract String constructControllerName(String name);
-
-
-	/******************** Finder methods ********************/		
-
-	/*********** 
-	 * Start of getting things by controller
-	 *******/
-
-	//	public IFile getViewFolder(IController controller) {
-	//		//TODO: find out how to search/manipulate paths
-	//		return getViewDir();
-	//	}
-
-	//	public IFile getJsFolder(IController controller) {
-	//	    String jsFolderName = controller.getName();
-	//	    return getProject().getFile(jsFolderName);
-	//	}
 
 	public String getModelNameForController(IController controller) {
 		// 1.x: tests -> test
@@ -213,22 +173,6 @@ public abstract class CakeVersion
 	{
 		return jsFile.getName();
 	}
-
-	/**
-	 * Start of getting things by controller and action
-	 */
-
-	//	public IFile getViewFile(IController controller, ICakeAction action) {
-	//	    String actionName = action.getName();
-	//	    IFile viewFile = getProject().getFile(getViewFolder(controller).toString() + File.separator + actionName);
-	//	    return viewFile;
-	//	}
-
-	//	public IFile getJsFile(IController controller, ICakeAction action) {
-	//	    String jsName = action.getName();
-	//	    IFile jsFile = getProject().getFile(getJsFolder(controller).toString() + File.separator + jsName);
-	//	    return jsFile;
-	//	}
 
 	public boolean isModel(IFile file) {
 		//For a model, 2nd to last segment should be <modelDirName>/

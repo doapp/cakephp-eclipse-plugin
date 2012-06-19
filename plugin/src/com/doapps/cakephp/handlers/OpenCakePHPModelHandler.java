@@ -1,12 +1,14 @@
 /**
- * OpenCakeFileHandler.java
- * cakephp-plugin
- * 
- * Created by jeremy on Jun 4, 2012
- * DoApp, Inc. owns and reserves all rights to the intellectual
- * property and design of the following application.
  *
- * Copyright 2012 - All rights reserved.  Created by DoApp, Inc.
+ * CakePHP Eclipse Plugin
+ * Copyright 2012, DoApp, Inc. (http://www.doapps.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2012, DoApp, Inc. (http://www.doapps.com)
+ * @link          https://github.com/doapp/cakephp-eclipse-plugin
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 package com.doapps.cakephp.handlers;
 

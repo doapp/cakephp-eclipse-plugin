@@ -1,22 +1,24 @@
+/**
+ *
+ * CakePHP Eclipse Plugin
+ * Copyright 2012, DoApp, Inc. (http://www.doapps.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2012, DoApp, Inc. (http://www.doapps.com)
+ * @link          https://github.com/doapp/cakephp-eclipse-plugin
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 package com.doapps.cakephp.files.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.MessageConsole;
-import org.eclipse.ui.console.MessageConsoleStream;
 
 import com.doapps.cakephp.files.CakePHPFileType;
 import com.doapps.cakephp.files.ICakePHPProject;
 import com.doapps.cakephp.files.IController;
-import com.doapps.cakephp.util.FileUtils;
 
 public class Controller extends CakePHPFile implements IController
 {    
