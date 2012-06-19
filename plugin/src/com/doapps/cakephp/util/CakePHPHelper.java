@@ -455,7 +455,7 @@ public abstract class CakePHPHelper
     {
       if (destinationFile != null)
       {
-        // TODO: prompt to create the file ?  I say no, why would you try the shortcut if you didn't want it created
+        //Don't prompt to create the file.  Why would you try the shortcut if you didn't want it created
         if (!destinationFile.exists())
         {
           IPath fullPath = destinationFile.getLocation();

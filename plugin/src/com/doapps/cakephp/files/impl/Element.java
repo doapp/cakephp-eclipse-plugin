@@ -16,7 +16,6 @@ public class Element extends CakePHPFile implements IElement
   @Override
   public String getInitialContents()
   {
-    // TODO Auto-generated method stub
     return null;
   }
   

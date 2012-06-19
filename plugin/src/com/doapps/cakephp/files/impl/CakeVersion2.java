@@ -3,6 +3,8 @@
  */
 package com.doapps.cakephp.files.impl;
 
+import java.util.regex.Pattern;
+
 import com.doapps.cakephp.files.CakeVersion;
 
 /**
@@ -14,7 +16,8 @@ public class CakeVersion2 extends CakeVersion
 	private static CakeVersion2 instance = null;
 	
 	public static String appDirName = "app";
-
+	private static final Pattern CONTROLLER_NAME_PATTERN = Pattern.compile("(.*)Controller\\..*");
+	
 	// so only this package com implement it
 	private CakeVersion2()
 	{
@@ -79,5 +82,9 @@ public class CakeVersion2 extends CakeVersion
 	public String constructViewName(String controllerName, String action)
 	{
 	  return controllerName + "/" + action + ".ctp";
+	}
+	
+	public Pattern getControllerNamePattern() {
+		return CakeVersion2.CONTROLLER_NAME_PATTERN;
 	}
 }

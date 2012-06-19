@@ -16,7 +16,6 @@ public class JSFile extends CakePHPFile implements IJSFile
   @Override
   public String getInitialContents()
   {
-    // TODO Auto-generated method stub
     return null;
   }
   

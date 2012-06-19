@@ -3,6 +3,8 @@
  */
 package com.doapps.cakephp.files.impl;
 
+import java.util.regex.Pattern;
+
 import com.doapps.cakephp.files.CakeVersion;
 
 /**
@@ -12,7 +14,8 @@ import com.doapps.cakephp.files.CakeVersion;
 public class CakeVersion1 extends CakeVersion
 {
 	private static CakeVersion1 instance = null;
-
+	private static final Pattern CONTROLLER_NAME_PATTERN = Pattern.compile("(.*)Controller\\..*");
+	
 	// so only this package com implement it
 	private CakeVersion1()
 	{
@@ -32,7 +35,6 @@ public class CakeVersion1 extends CakeVersion
 	 * @see com.doapps.cakephp.files.ICakeVersion#getDefaultAppDir()
 	 */
 	public String getDefaultAppDirName() {
-		//TODO: look up if they have a proj specific property, otherwise fall back to window pref, otherwise hardcode 'app'
 		return "app";
 	}	
 
@@ -77,4 +79,8 @@ public class CakeVersion1 extends CakeVersion
   {
     return controllerName + "/" + action + ".ctp";
   }
+  
+	public Pattern getControllerNamePattern() {
+		return CakeVersion1.CONTROLLER_NAME_PATTERN;
+	}
 }

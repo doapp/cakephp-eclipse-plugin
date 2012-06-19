@@ -32,7 +32,6 @@ public class Switch extends org.eclipse.core.commands.AbstractHandler
 	@Override
 	public Object execute(ExecutionEvent executionEvent) throws ExecutionException
 	{
-		// TODO Auto-generated method stub
 		IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (editorPart != null)
 		{
