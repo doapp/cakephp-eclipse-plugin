@@ -70,4 +70,12 @@ This plugin was inspired by the [open cake file plugin](http://opencakefile.sour
 *  [asset_compress plugin](https://github.com/markstory/asset_compress) to manage all your css/js files
 *  [webrf](https://github.com/rynop/webrf) to easily refresh that browser on your other window while you edit
 
+## Build instructions
+
+1.  Checkout gh-pages branch and pull
+1.  Checkout master branch and pull
+1.  Syncronize update site, and build
+1.  Checkout gh-pages, commit, and push
+
+
 
