@@ -6,7 +6,3 @@
 *.ear
 
 !plugin/lib/*
-
-# ignore update site folder cuz 
-update-site/
-
