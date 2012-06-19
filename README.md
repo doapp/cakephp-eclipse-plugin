@@ -72,10 +72,11 @@ This plugin was inspired by the [open cake file plugin](http://opencakefile.sour
 
 ## Build instructions
 
-1.  Checkout gh-pages branch and pull
-1.  Checkout master branch and pull
+1.  <code>git checkout gh-pages && git pull && git checkout master && git pull</code>
 1.  Syncronize update site, and build
-1.  Checkout gh-pages, commit, and push
+1.  <code>git add update-site/ && git commit -am 'new updatesite build' && git push</code>
+1.  <code>cp -Rf update-site /tmp/</code>
+1.  <code>git checkout gh-pages && git pull && cp -R /tmp/update-site/* update-site/ && git commit -am 'new updatesite build' && git push</code>
 
 
 
