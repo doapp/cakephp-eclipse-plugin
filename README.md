@@ -19,7 +19,7 @@ This plugin makes creating and editing CakePHP projects a breeze.  Among other t
 
 You must have eclipse 3.7 and PDT.  You have 2 options to get PDT:
 
-*  The most up-to-date version of PDT is now maintained by Zend. To get this version you must download the [Zend all-in-one PDT](http://www.zend.com/en/community/pdt/). They don't have an update site for their PDT. [You should complain](http://www.zend.com/en/company/contact-us/).
+*  The most up-to-date version of PDT is now maintained by Zend. To get this version you must download the [Zend all-in-one PDT](http://www.zend.com/en/community/pdt/). They don't have an update site for their version of PDT. [You should complain](http://www.zend.com/en/company/contact-us/).
 *  From your existing Eclise 3.7 install: **help > install new software > (search for PDT)**
 
 ### Install plugin and configure enviornment
