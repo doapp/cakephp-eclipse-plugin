@@ -3,6 +3,15 @@
  */
 package com.doapps.cakephp.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -20,6 +29,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleManager;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 
 import com.doapps.cakephp.Activator;
 import com.doapps.cakephp.preferences.PreferenceConstants;
@@ -214,4 +228,115 @@ public class FileUtils {
 		}
 		return file;
 	}
+	
+	//String[] command
+	public static int runCommandInConsole() {
+		String[] command = {"/bin/bash", "-c", "/home/ryan/git/mln-webapp/webapp/app/Console/cake bake"};
+		String name = "testConsole";
+		MessageConsole myConsole = null;
+
+		ConsolePlugin plugin = ConsolePlugin.getDefault();
+		IConsoleManager conMan = plugin.getConsoleManager();
+		IConsole[] existing = conMan.getConsoles();
+		for (int i = 0; i < existing.length; i++){
+			if (name.equals(existing[i].getName())){
+				myConsole = (MessageConsole) existing[i];
+			}
+		}
+		if(null == myConsole){
+			//no console found, so create a new one
+			myConsole = new MessageConsole(name, null);
+			conMan.addConsoles(new IConsole[]{myConsole});
+		}
+		MessageConsoleStream out = myConsole.newMessageStream();
+
+		Process process = null;
+		try {
+			ProcessBuilder pb = new ProcessBuilder(command);
+			pb.redirectErrorStream(true);
+			pb.directory(new File("/home/ryan/git/mln-webapp/webapp/app/"));
+			process = pb.start();
+			InputStream is = process.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			String line;
+
+			while ((line = br.readLine()) != null) {
+				out.println(line);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static String executeCommand(String command, boolean waitForResponse) {
+
+		String response = "";
+
+		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", command);
+		pb.redirectErrorStream(true);
+
+		try {
+			Process shell = pb.start();
+
+			if (waitForResponse) {
+
+				// To capture output from the shell
+				InputStream shellIn = shell.getInputStream();
+
+				// Wait for the shell to finish and get the return code
+				int shellExitStatus = shell.waitFor();
+				System.out.println("Exit status" + shellExitStatus);
+
+				response = convertStreamToStr(shellIn);
+
+				shellIn.close();
+			}
+
+		}
+
+		catch (IOException e) {
+			System.out.println("Error occured while executing Linux command. Error Description: "
+					+ e.getMessage());
+		}
+
+		catch (InterruptedException e) {
+			System.out.println("Error occured while executing Linux command. Error Description: "
+					+ e.getMessage());
+		}
+
+		return response;
+	}
+
+	/*
+	 * To convert the InputStream to String we use the Reader.read(char[]
+	 * buffer) method. We iterate until the Reader return -1 which means
+	 * there's no more data to read. We use the StringWriter class to
+	 * produce the string.
+	 */
+
+	public static String convertStreamToStr(InputStream is) throws IOException {
+
+		if (is != null) {
+			Writer writer = new StringWriter();
+
+			char[] buffer = new char[1024];
+			try {
+				Reader reader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+			} finally {
+				is.close();
+			}
+			return writer.toString();
+		}
+		else {
+			return "";
+		}
+	}
+	
 }
