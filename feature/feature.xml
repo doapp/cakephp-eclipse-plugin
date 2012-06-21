@@ -6,7 +6,7 @@
       provider-name="DoApp">
 
    <description url="https://github.com/doapp/cakephp-eclipse-plugin">
-      An Eclipse plugin for interacting with CakePHP projects
+An Eclipse plugin for interacting with CakePHP projects
  
  This plugin makes creating and editing CakePHP projects a breeze. Among other things, it binds keys to perform frequently used actions.
  
