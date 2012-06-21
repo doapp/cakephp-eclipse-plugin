@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.doapps.cakephp.feature_1.0.0.201206191502.jar" id="com.doapps.cakephp.feature" version="1.0.0.201206191502" os="aix,hpux,linux,macosx,qnx,solaris,win32" ws="carbon,cocoa,gtk,motif,photon,win32,wpf" arch="ia64,ia64_32,PA_RISC,ppc,sparc,x86,x86_64">
+   <feature url="features/com.doapps.cakephp.feature_1.0.0.201206191502.jar" id="com.doapps.cakephp.feature" version="1.0.0.201206191502" os="" ws="" arch="">
       <category name="com.doapps.cakephp"/>
    </feature>
    <category-def name="com.doapps.cakephp" label="CakePHP Eclipse plugin">
