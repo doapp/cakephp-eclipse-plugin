@@ -56,6 +56,7 @@ We recommend using the [asset_compress plugin](https://github.com/markstory/asse
 
 ## TODO/Need help
 
+* OSX debugging. Plugin does not seem to work on OSX, need someone with a MAC to look into why.
 * right click>bake on M|V|C directory will kick off [eclipse external tool](http://rynop.com/setting-up-eclipse-36-for-cakephp-13-developm) to bake file(s). This might help: http://stackoverflow.com/questions/4591141/how-to-launch-external-tool-from-custom-menu
 * ctrl+shift+e to display a typeahead popup of elements to open
 * tie in saves to [webrf](https://github.com/rynop/webrf)
